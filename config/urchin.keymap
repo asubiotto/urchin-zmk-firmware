@@ -109,10 +109,10 @@
 		// Base alpha layer
 		default_layer {
 			bindings = <
-			&kp Q &kp W &kp F &kp P            &kp G                &kp J &kp L  &kp U      &kp Y   &kp BSPC
-			&kp A &kp R &kp S &rgui_nav_kp 0 T &kp D                &kp H &kp N  &kp E      &kp I   &kp O
-			&kp Z &kp X &kp C &kp V            &kp B                &kp K &kp M  &comma_dot &kp SEMICOLON &kp SLASH
-					          &qt LSHIFT TAB   &lth LCTRL SYM       &qt RGUI SPACE &qt RSHIFT ENTER
+			&kp Q &kp W &kp F &kp P &kp G                           &kp J &kp L  &kp U      &kp Y   &kp BSPC
+			&kp A &kp R &kp S &kp T &kp D                           &kp H &kp N  &kp E      &kp I   &kp O
+			&rgui_nav_kp 0 Z &kp X &kp C &kp V &kp B                &kp K &kp M  &comma_dot &kp SEMICOLON &kp SLASH
+					          &qt LSHIFT TAB   &lth LCTRL SYM       &kp SPACE &qt RSHIFT ENTER
 			>;
 		};
 
@@ -122,16 +122,16 @@
 			&sp N1 &sp N2 &sp N3 &sp N4 &sp N5                         &sp N6 &sp N7 &sp N8 &sp N9 &sp N0
 			&sp GRAVE &sp MINUS &sp LBKT &sp RBKT &sp BSLH             &sp EQUAL &sp SQT &sp LPAR &sp RPAR &sp PIPE
 			&sp TILDE &sp UNDER &sp LBRC &sp RBRC &sp HASH             &sp PLUS &sp DQT &sp LT &sp GT &sp AMPS
-                                         &to NAV  &sp ESC              &kp RGUI &kp RSHIFT
+                                         &kp LSHIFT &sp ESC            &to NAV &kp RSHIFT
 			>;
 		};
 
         nav_layer {
 			bindings = <
-			&kp N1 &kp N2 &kp N3 &kp N4 &kp N5                          &kp N6 &kp N7 &kp N8 &kp N9 &kp N0
-			&trans &trans &trans &trans &trans                          &kp TAB &kp LEFT &kp UP &kp DOWN &kp RIGHT
-			&trans &trans &trans &trans &trans                          &trans &trans &trans &trans &trans
-                                 &trans &to BASE                        &to BASE &trans
+			&kp N1 &kp N2 &kp N3 &kp N4 &kp N5               &kp N6 &kp N7 &kp N8 &kp N9 &kp N0
+			&kp Z &kp R &kp S &kp T &trans                   &kp TAB &kp LEFT &kp UP &kp DOWN &kp RIGHT
+			&trans &kp X &kp C &kp V &trans                  &trans &trans &trans &trans &trans
+                               &kp LSHIFT &to BASE               &to BASE &kp RSHIFT
 			>;
 		};
 
