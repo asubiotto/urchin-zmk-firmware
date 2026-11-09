@@ -1,366 +1,452 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZMK Keymap Reference</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Courier New', monospace;
-            font-size: 9px;
-            line-height: 1.1;
-            padding: 8px;
-            background: white;
-        }
-        
-        .header {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 4px;
-        }
-        
-        .layer-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        
-        .layer {
-            border: 1px solid #333;
-            padding: 6px;
-            background: #f9f9f9;
-        }
-        
-        .layer-title {
-            font-weight: bold;
-            text-align: center;
-            font-size: 10px;
-            margin-bottom: 4px;
-            background: #333;
-            color: white;
-            padding: 2px;
-        }
-        
-        .keyboard {
-            display: grid;
-            grid-template-rows: repeat(4, 1fr);
-            gap: 1px;
-            font-size: 7px;
-            max-width: 200px;
-            margin: 0 auto;
-        }
-        
-        .row {
-            display: grid;
-            gap: 1px;
-        }
-        
-        .row1, .row2, .row3 {
-            grid-template-columns: repeat(5, 1fr) 8px repeat(5, 1fr);
-        }
-        
-        .row4 {
-            grid-template-columns: 1fr 1fr 8px 1fr 1fr;
-            justify-items: center;
-            align-items: center;
-        }
-        
-        .key {
-            aspect-ratio: 1;
-            border: 1px solid #666;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-weight: bold;
-            background: white;
-            font-size: 9px;
-            min-height: 26px;
-            min-width: 26px;
-            padding: 1px;
-            word-break: break-all;
-            overflow: visible;
-        }
-        
-        .thumb {
-            min-width: 32px;
-            background: #e8e8e8;
-            font-size: 8px;
-        }
-        
-        .split-gap {
-            background: transparent;
-            border: none;
-        }
-        
-        .combos, .notes {
-            margin-top: 6px;
-            font-size: 8px;
-            border: 1px solid #666;
-            padding: 4px;
-            background: #f0f0f0;
-        }
-        
-        .combo-title, .notes-title {
-            font-weight: bold;
-            margin-bottom: 2px;
-            text-decoration: underline;
-        }
-        
-        @media print {
-            body { font-size: 8px; }
-            .keyboard { font-size: 6px; }
-            .key { 
-                font-size: 8px; 
-                min-height: 24px; 
-                min-width: 24px;
-                border: 1px solid #333;
-            }
-            .thumb {
-                font-size: 7px;
-                min-width: 30px;
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Urchin QWERTY Layers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one wide keyboard "plate" up top, a shortcut player beneath it (list | step-by-step readout). */
+:root {
+  --bg: #eceff3;
+  --plate: #dfe4ea;
+  --surface: #ffffff;
+  --cap: #fbfcfd;
+  --cap-edge: #c3cbd6;
+  --cap-shadow: #b4bdc9;
+  --fg: #17202b;
+  --muted: #5a6574;
+  --line: #d3d9e1;
+  --mod: #b86a00;
+  --mod-bg: #ffe6bd;
+  --layer: #0b7a72;
+  --layer-bg: #c6ebe6;
+  --tap: #3149d6;
+  --tap-bg: #d5dcff;
+  --combo: #8a2fb8;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151b; --plate: #181e26; --surface: #1a2029; --cap: #232b36; --cap-edge: #364151; --cap-shadow: #0b0e12;
+    --fg: #e5eaf0; --muted: #98a3b2; --line: #2b3440;
+    --mod: #f2aa45; --mod-bg: #4a3312; --layer: #52d3c6; --layer-bg: #123f3b;
+    --tap: #93a3ff; --tap-bg: #27306a; --combo: #d08cf5; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151b; --plate: #181e26; --surface: #1a2029; --cap: #232b36; --cap-edge: #364151; --cap-shadow: #0b0e12;
+  --fg: #e5eaf0; --muted: #98a3b2; --line: #2b3440;
+  --mod: #f2aa45; --mod-bg: #4a3312; --layer: #52d3c6; --layer-bg: #123f3b;
+  --tap: #93a3ff; --tap-bg: #27306a; --combo: #d08cf5; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.5; margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 48px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+header { display: flex; flex-direction: column; gap: 6px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--font-display); font-stretch: 112%; font-weight: 800; font-size: clamp(28px, 5vw, 44px); line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+.lede { margin: 0; max-width: 66ch; color: var(--muted); }
+h2 { font-family: var(--font-display); font-stretch: 105%; font-weight: 700; font-size: 20px; margin: 0; }
+
+.plate { background: var(--plate); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab {
+  font: 600 13px/1 var(--font-mono); padding: 9px 12px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--cap-edge); background: var(--cap); color: var(--fg);
+}
+.tab[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.tab:focus-visible, .demo:focus-visible, .btn:focus-visible { outline: 2px solid var(--tap); outline-offset: 2px; }
+.layer-note { margin: 0; color: var(--muted); font-size: 14px; min-height: 2.6em; }
+.board-scroll { overflow-x: auto; }
+svg.board { display: block; width: 100%; min-width: 560px; height: auto; }
+
+.key rect.cap { fill: var(--cap); stroke: var(--cap-edge); stroke-width: 1.2; transition: fill .15s, stroke .15s; }
+.key rect.shadow { fill: var(--cap-shadow); }
+.key text { font-family: var(--font-mono); fill: var(--fg); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.key text.main { font-size: 15px; font-weight: 600; }
+.key text.main.long { font-size: 12px; }
+.key text.sub { font-size: 9.5px; fill: var(--muted); font-family: var(--font-body); font-weight: 500; }
+.key.k-mod rect.cap { fill: var(--mod-bg); }
+.key.k-mod text.main { fill: var(--mod); }
+.key text.sub.hrm { fill: var(--mod); font-family: var(--font-mono); font-size: 11px; font-weight: 600; }
+.key text.sub.lyr { fill: var(--layer); font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: .04em; }
+.key.k-blank text.main { fill: var(--cap-edge); }
+.key.k-thisLayer rect.cap { fill: var(--layer-bg); stroke: var(--layer); stroke-width: 2; }
+.key.k-thisLayer text { fill: var(--layer); }
+.key.held-mod rect.cap { fill: var(--mod); stroke: var(--mod); }
+.key.held-mod text { fill: var(--surface); }
+.key.held-layer rect.cap { fill: var(--layer); stroke: var(--layer); }
+.key.held-layer text { fill: var(--surface); }
+.key.tapped rect.cap { fill: var(--tap); stroke: var(--tap); }
+.key.tapped text { fill: var(--surface); }
+.key.k-thisLayer text.sub { fill: var(--layer); }
+.key.held-mod text.sub, .key.held-layer text.sub, .key.tapped text.sub { fill: var(--surface); }
+.combo-pill rect { fill: var(--surface); stroke: var(--combo); stroke-width: 1.4; }
+.combo-pill text { fill: var(--combo); font: 600 10px var(--font-mono); text-anchor: middle; dominant-baseline: middle; }
+.combo-pill.fired rect { fill: var(--combo); }
+.combo-pill.fired text { fill: var(--surface); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 14px; height: 14px; border-radius: 4px; display: inline-block; border: 1px solid var(--cap-edge); }
+
+.player { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 20px; align-items: start; }
+@media (max-width: 760px) { .player { grid-template-columns: 1fr; } }
+.demo-list { display: flex; flex-direction: column; gap: 14px; }
+.group { display: flex; flex-direction: column; gap: 4px; }
+.group-name { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.demo {
+  display: flex; justify-content: space-between; gap: 10px; align-items: baseline; text-align: left;
+  font: 500 14px var(--font-body); color: var(--fg); background: transparent; border: 1px solid transparent;
+  border-radius: 8px; padding: 7px 10px; cursor: pointer; width: 100%;
+}
+.demo:hover { background: var(--surface); border-color: var(--line); }
+.demo[aria-current="true"] { background: var(--surface); border-color: var(--tap); }
+.demo kbd { font: 600 12.5px var(--font-mono); color: var(--muted); white-space: nowrap; }
+.readout { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; gap: 12px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+@media (max-width: 760px) { .readout { position: static; } }
+.readout .app { font-family: var(--font-mono); font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.readout .shortcut { font-family: var(--font-display); font-stretch: 110%; font-size: 30px; font-weight: 800; line-height: 1.1; }
+.readout .does { margin: 0; color: var(--muted); }
+ol.steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+ol.steps li { color: var(--muted); transition: color .15s; }
+ol.steps li.on { color: var(--fg); font-weight: 600; }
+ol.steps li.done { color: var(--fg); }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { font: 600 13px var(--font-body); padding: 8px 14px; border-radius: 8px; cursor: pointer; border: 1px solid var(--line); background: var(--cap); color: var(--fg); }
+.btn.primary { background: var(--tap); border-color: var(--tap); color: var(--surface); }
+.why { margin: 0; font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 10px; }
+
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.note { display: flex; flex-direction: column; gap: 4px; }
+.note h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.note p { margin: 0; color: var(--muted); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .key rect.cap, ol.steps li { transition: none; } }
+</style>
 </head>
 <body>
-    <div class="header">ZMK Keymap Reference - 34-Key Split</div>
-    
-    <div class="layer-grid">
-        <!-- BASE Layer -->
-        <div class="layer">
-            <div class="layer-title">BASE (0) - Default</div>
-            <div class="keyboard">
-                <div class="row row1">
-                    <div class="key">Q</div>
-                    <div class="key">W</div>
-                    <div class="key">F</div>
-                    <div class="key">P</div>
-                    <div class="key">G</div>
-                    <div class="split-gap"></div>
-                    <div class="key">J</div>
-                    <div class="key">L</div>
-                    <div class="key">U</div>
-                    <div class="key">Y</div>
-                    <div class="key">BSPC</div>
-                </div>
-                <div class="row row2">
-                    <div class="key">A</div>
-                    <div class="key">R</div>
-                    <div class="key">S</div>
-                    <div class="key">GUI/T</div>
-                    <div class="key">D</div>
-                    <div class="split-gap"></div>
-                    <div class="key">H</div>
-                    <div class="key">N</div>
-                    <div class="key">E</div>
-                    <div class="key">I</div>
-                    <div class="key">O</div>
-                </div>
-                <div class="row row3">
-                    <div class="key">Z</div>
-                    <div class="key">X</div>
-                    <div class="key">C</div>
-                    <div class="key">V</div>
-                    <div class="key">B</div>
-                    <div class="split-gap"></div>
-                    <div class="key">K</div>
-                    <div class="key">M</div>
-                    <div class="key">,/.</div>
-                    <div class="key">;</div>
-                    <div class="key">/</div>
-                </div>
-                <div class="row row4">
-                    <div class="key thumb">SFT/TAB</div>
-                    <div class="key thumb">CTL/SYM</div>
-                    <div class="split-gap"></div>
-                    <div class="key thumb">GUI/SPC</div>
-                    <div class="key thumb">SFT/RET</div>
-                </div>
-            </div>
-        </div>
 
-        <!-- SYM Layer -->
-        <div class="layer">
-            <div class="layer-title">SYM (1) - Numbers & Symbols (Auto-Return)</div>
-            <div class="keyboard">
-                <div class="row row1">
-                    <div class="key">1</div>
-                    <div class="key">2</div>
-                    <div class="key">3</div>
-                    <div class="key">4</div>
-                    <div class="key">5</div>
-                    <div class="split-gap"></div>
-                    <div class="key">6</div>
-                    <div class="key">7</div>
-                    <div class="key">8</div>
-                    <div class="key">9</div>
-                    <div class="key">0</div>
-                </div>
-                <div class="row row2">
-                    <div class="key">`</div>
-                    <div class="key">-</div>
-                    <div class="key">[</div>
-                    <div class="key">]</div>
-                    <div class="key">\</div>
-                    <div class="split-gap"></div>
-                    <div class="key">=</div>
-                    <div class="key">'</div>
-                    <div class="key">(</div>
-                    <div class="key">)</div>
-                    <div class="key">|</div>
-                </div>
-                <div class="row row3">
-                    <div class="key">~</div>
-                    <div class="key">_</div>
-                    <div class="key">{</div>
-                    <div class="key">}</div>
-                    <div class="key">#</div>
-                    <div class="split-gap"></div>
-                    <div class="key">+</div>
-                    <div class="key">"</div>
-                    <div class="key">&lt;</div>
-                    <div class="key">&gt;</div>
-                    <div class="key">&amp;</div>
-                </div>
-                <div class="row row4">
-                    <div class="key thumb">GUI</div>
-                    <div class="key thumb">ESC</div>
-                    <div class="split-gap"></div>
-                    <div class="key thumb">&gt;NAV</div>
-                    <div class="key thumb">RSFT</div>
-                </div>
-            </div>
-        </div>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">ZMK keymap · 34 keys · macOS</div>
+    <h1>Urchin QWERTY layers</h1>
+    <p class="lede">Plain QWERTY with home-row mods, four layers held by the thumbs, and a player that walks through your real shortcuts press by press. Pick a layer to browse it, or pick a shortcut to watch how you'd press it.</p>
+  </header>
 
-        <!-- NAV Layer -->
-        <div class="layer">
-            <div class="layer-title">NAV (2) - Navigation</div>
-            <div class="keyboard">
-                <div class="row row1">
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="split-gap"></div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                </div>
-                <div class="row row2">
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="split-gap"></div>
-                    <div class="key">TAB</div>
-                    <div class="key">←</div>
-                    <div class="key">↑</div>
-                    <div class="key">↓</div>
-                    <div class="key">→</div>
-                </div>
-                <div class="row row3">
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="split-gap"></div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                </div>
-                <div class="row row4">
-                    <div class="key thumb">---</div>
-                    <div class="key thumb">&gt;BASE</div>
-                    <div class="split-gap"></div>
-                    <div class="key thumb">&gt;BASE</div>
-                    <div class="key thumb">---</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SETTINGS Layer -->
-        <div class="layer">
-            <div class="layer-title">SETTINGS (3) - Bluetooth & System</div>
-            <div class="keyboard">
-                <div class="row row1">
-                    <div class="key">BOOT</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">BT_CLR</div>
-                    <div class="key">BT0</div>
-                    <div class="split-gap"></div>
-                    <div class="key">BT3</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">BOOT</div>
-                </div>
-                <div class="row row2">
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">BT1</div>
-                    <div class="split-gap"></div>
-                    <div class="key">BT4</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                </div>
-                <div class="row row3">
-                    <div class="key">UNLCK</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">BT2</div>
-                    <div class="split-gap"></div>
-                    <div class="key">BT5</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">---</div>
-                    <div class="key">UNLCK</div>
-                </div>
-                <div class="row row4">
-                    <div class="key thumb">---</div>
-                    <div class="key thumb">---</div>
-                    <div class="split-gap"></div>
-                    <div class="key thumb">---</div>
-                    <div class="key thumb">---</div>
-                </div>
-            </div>
-        </div>
+  <section class="plate" aria-label="Keyboard">
+    <div class="tabs" role="group" aria-label="Layer">
+      <button class="tab" id="tab-base" data-layer="base" aria-pressed="true">BASE</button>
+      <button class="tab" id="tab-nav" data-layer="nav" aria-pressed="false">NAV · hold ⌫</button>
+      <button class="tab" id="tab-num" data-layer="num" aria-pressed="false">NUM · hold Tab</button>
+      <button class="tab" id="tab-sym" data-layer="sym" aria-pressed="false">SYM · hold Space</button>
+      <button class="tab" id="tab-sys" data-layer="sys" aria-pressed="false">SYS · both left thumbs</button>
     </div>
-
-    <div class="combos">
-        <div class="combo-title">Combos:</div>
-        • Both thumbs (pos 30+31) → SETTINGS layer
+    <p class="layer-note" id="layer-note"></p>
+    <div class="board-scroll"><svg class="board" id="board" viewBox="0 0 678 296" role="img" aria-label="Urchin keyboard layout"></svg></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--mod-bg)"></i>Plain mod on this layer, no timing</span>
+      <span><i class="sw" style="background:var(--layer-bg)"></i>Thumb holding this layer</span>
+      <span><i class="sw" style="background:var(--mod)"></i>Held mod</span>
+      <span><i class="sw" style="background:var(--layer)"></i>Held layer</span>
+      <span><i class="sw" style="background:var(--tap)"></i>Tap</span>
+      <span><i class="sw" style="background:var(--surface);border-color:var(--combo)"></i>Combo: press both together</span>
     </div>
+  </section>
 
-    <div class="notes">
-        <div class="notes-title">Notes:</div>
-        • ,/. = comma (tap) / dot (shift+tap) • GUI/T = tap for T, hold for GUI+NAV<br>
-        • SFT/TAB = tap for tab, hold for shift • CTL/SYM = tap for ctrl, hold to SYM layer<br>
-        • GUI/SPC = tap for space, hold for GUI • SFT/RET = tap for enter, hold for shift<br>
-        • SYM layer: All keys auto-return to BASE after press • "---" = transparent/none
+  <section class="player" aria-label="Shortcut player">
+    <div class="demo-list" id="demo-list"></div>
+    <div class="readout" aria-live="polite">
+      <div class="app" id="r-app"></div>
+      <div class="shortcut" id="r-shortcut"></div>
+      <p class="does" id="r-does"></p>
+      <ol class="steps" id="r-steps"></ol>
+      <div class="controls">
+        <button class="btn primary" id="btn-replay">Replay</button>
+        <button class="btn" id="btn-auto" aria-pressed="true">Pause tour</button>
+        <button class="btn" id="btn-next">Next shortcut</button>
+      </div>
+      <p class="why" id="r-why"></p>
     </div>
+  </section>
+
+  <section class="notes" aria-label="Design rules">
+    <div class="note"><h3>Mods on the home row</h3><p>⌃ ⌥ ⌘ ⇧ under pinky, ring, middle, index on both hands. Hold one, then press a key on the other hand. Uses urob's timeless settings so fast typing doesn't trigger mods.</p></div>
+    <div class="note"><h3>Plain mods on NAV and NUM</h3><p>When a left thumb holds NAV or NUM, the left home row becomes ordinary modifier keys. ⌃⌥→ or ⌥3 never depends on timing.</p></div>
+    <div class="note"><h3>hjkl are the arrows</h3><p>Vim, Gmail, Linear and window managers already use h j k l, so the arrows live on those keys too.</p></div>
+    <div class="note"><h3>Numbers opposite the mods</h3><p>A right-hand numpad, 1-2-3 on top, held from the left thumb. Every ⌘/⌃/⌥ + number uses both hands.</p></div>
+  </section>
+</div>
+
+<script>
+(function () {
+  // ---- layers: 34 positions. 0-9 top, 10-19 home, 20-29 bottom, 30-33 thumbs (L outer, L inner, R inner, R outer)
+  // k: { t: main legend, s: small legend, c: class ('hrm' sub, 'lyr' sub, 'mod' plain mod, 'blank', 'this' active-layer thumb), to: layer it holds }
+  const K = (t, s, c, to) => ({ t, s: s || "", c: c || "", to });
+  const B = () => K("·", "", "blank");
+  const L = {
+    base: [
+      K("Q"),K("W"),K("E"),K("R"),K("T"), K("Y"),K("U"),K("I"),K("O"),K("P"),
+      K("A","⌃","hrm"),K("S","⌥","hrm"),K("D","⌘","hrm"),K("F","⇧","hrm"),K("G"),
+      K("H"),K("J","⇧","hrm"),K("K","⌘","hrm"),K("L","⌥","hrm"),K(";","⌃","hrm"),
+      K("Z"),K("X"),K("C"),K("V"),K("B"), K("N"),K("M"),K(","),K("."),K("/"),
+      K("Tab","NUM","lyr","num"),K("⌫","NAV","lyr","nav"),K("Space","SYM","lyr","sym"),K("⏎","⇧","hrm")
+    ],
+    nav: [
+      K("⌘`","window"),K("⌘[","back"),K("⌘⇧[","prev tab"),K("⌘⇧]","next tab"),K("⌘]","forward"),
+      K("⌘←","line start"),K("⌥←","word"),K("⌥→","word"),K("⌘→","line end"),K("Del","fwd del"),
+      K("⌃","","mod"),K("⌥","","mod"),K("⌘","","mod"),K("⇧","","mod"),K("Caps","word"),
+      K("←"),K("↓"),K("↑"),K("→"),K("⌫"),
+      K("⌘Z","undo"),K("⌘X","cut"),K("⌘C","copy"),K("⌘V","paste"),K("⌘⇧Z","redo"),
+      K("Lock","NAV"),K("PgDn"),K("PgUp"),B(),B(),
+      K("Tab","NUM→SYS","lyr","num"),K("NAV","held","this"),K("Space"),K("⏎")
+    ],
+    num: [
+      B(),B(),B(),B(),B(), K("*"),K("1"),K("2"),K("3"),K("-"),
+      K("⌃","","mod"),K("⌥","","mod"),K("⌘","","mod"),K("⇧","","mod"),B(),
+      K("."),K("4"),K("5"),K("6"),K("+"),
+      B(),B(),B(),B(),B(), K(","),K("7"),K("8"),K("9"),K("="),
+      K("NUM","held","this"),K("⌫","NAV→SYS","lyr","nav"),K("0"),K(".")
+    ],
+    sym: [
+      K("!"),K("@"),K("#"),K("$"),K("%"), K("^"),K("{"),K("}"),K("*"),K("&"),
+      K("`"),K("-"),K("="),K("'"),K('"'), K("\\"),K("("),K(")"),K(":"),K(";"),
+      K("~"),K("_"),K("+"),K("|"),K("?"), K("<"),K("["),K("]"),K(">"),K("/"),
+      B(),B(),K("SYM","held","this"),B()
+    ],
+    sys: [
+      K("Boot"),B(),B(),K("BT","clear"),K("BT 0"), K("BT 3"),K("⏮"),K("⏯"),K("⏭"),K("Boot"),
+      B(),B(),B(),B(),K("BT 1"), K("BT 4"),K("Vol−"),K("Vol+"),K("Mute"),B(),
+      K("Studio","unlock"),B(),B(),B(),K("BT 2"), K("BT 5"),K("Bri−"),K("Bri+"),B(),K("Studio","unlock"),
+      K("NUM","held","this"),K("NAV","held","this"),B(),B()
+    ]
+  };
+  const NOTES = {
+    base: "Plain QWERTY. Hold a home-row key and it becomes a mod (⌃ ⌥ ⌘ ⇧, mirrored on each hand). Thumbs: tap for Tab, ⌫, Space, ⏎; hold for NUM, NAV, SYM, ⇧. Press W and E together for Esc.",
+    nav: "Hold the ⌫ thumb. Right hand: hjkl arrows, word and line jumps, page up/down. Left hand: plain mods, tab and history keys on top, undo/cut/copy/paste/redo on the bottom for one-handed use beside the mouse. Tap N to lock NAV on; tap the ⌫ thumb to leave.",
+    num: "Hold the Tab thumb. Right-hand numpad with 0 on the thumb. Left home row: plain mods, so ⌘2, ⌃3 or ⌥⇧4 split across both hands.",
+    sym: "Hold Space. The left top row is Shift+1–5 where you expect it. Openers { ( [ are in the index column and closers } ) ] in the middle column.",
+    sys: "Hold both left thumbs, the same gesture as your current settings combo. Bluetooth profiles, bootloader, ZMK Studio unlock, media, volume and brightness."
+  };
+  const COMBOS = [{ a: 1, b: 2, label: "Esc", layer: "base" }];
+
+  // ---- geometry
+  const U = 58, G = 5, S = U - G;           // key unit, gap, cap size
+  const stag = [0.55, 0.18, 0, 0.18, 0.34]; // left: pinky, ring, middle, index, inner
+  const LX = 14, RX = LX + 5 * U + 74, TOP = 14;
+  const pos = [];
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 5; c++) pos[r * 10 + c] = { x: LX + c * U, y: TOP + (r + stag[c]) * U, rot: 0 };
+    for (let c = 0; c < 5; c++) pos[r * 10 + 5 + c] = { x: RX + c * U, y: TOP + (r + stag[4 - c]) * U, rot: 0 };
+  }
+  const ty = TOP + 3.42 * U;
+  pos[30] = { x: LX + 2.55 * U, y: ty, rot: 9 };
+  pos[31] = { x: LX + 3.62 * U, y: ty + 0.2 * U, rot: 20 };
+  pos[32] = { x: RX + 0.38 * U, y: ty + 0.2 * U, rot: -20 };
+  pos[33] = { x: RX + 1.45 * U, y: ty, rot: -9 };
+
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("board");
+  const el = (n, a, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+  const keys = [];
+  for (let i = 0; i < 34; i++) {
+    const p = pos[i], cx = p.x + S / 2, cy = p.y + S / 2;
+    const g = el("g", { class: "key", transform: `rotate(${p.rot} ${cx} ${cy})` }, svg);
+    el("rect", { class: "shadow", x: p.x, y: p.y + 3, width: S, height: S, rx: 8 }, g);
+    el("rect", { class: "cap", x: p.x, y: p.y, width: S, height: S, rx: 8 }, g);
+    const main = el("text", { class: "main", x: cx, y: cy - 5 }, g);
+    const sub = el("text", { class: "sub", x: cx, y: p.y + S - 10 }, g);
+    const tip = el("title", {}, g);
+    keys.push({ g, main, sub, tip });
+  }
+  const comboEls = COMBOS.map(cb => {
+    const a = pos[cb.a], b = pos[cb.b];
+    const x = (a.x + b.x + S) / 2, y = (a.y + b.y) / 2 + S / 2;
+    const g = el("g", { class: "combo-pill" }, svg);
+    el("rect", { x: x - 17, y: y - 9, width: 34, height: 18, rx: 9 }, g);
+    const t = el("text", { x, y: y + 0.5 }, g); t.textContent = cb.label;
+    return { cb, g };
+  });
+
+  let layer = "base";
+  function render() {
+    const lay = L[layer];
+    lay.forEach((k, i) => {
+      const o = keys[i];
+      o.main.textContent = k.t;
+      o.main.setAttribute("class", "main" + (k.t.length > 3 ? " long" : ""));
+      o.main.setAttribute("y", k.s ? pos[i].y + S / 2 - 5 : pos[i].y + S / 2);
+      o.sub.textContent = k.s;
+      o.sub.setAttribute("class", "sub" + (k.c === "hrm" ? " hrm" : k.c === "lyr" ? " lyr" : ""));
+      o.tip.textContent = k.t + (k.s ? " — " + k.s : "");
+      const cls = ["key"];
+      if (k.c === "mod") cls.push("k-mod");
+      if (k.c === "blank") cls.push("k-blank");
+      if (k.c === "this") cls.push("k-thisLayer");
+      if (held.has(i)) cls.push(held.get(i));
+      if (tapped.has(i)) cls.push("tapped");
+      o.g.setAttribute("class", cls.join(" "));
+    });
+    comboEls.forEach(c => {
+      c.g.style.display = c.cb.layer === layer ? "" : "none";
+      c.g.setAttribute("class", "combo-pill" + (comboFired ? " fired" : ""));
+    });
+    document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-pressed", b.dataset.layer === layer ? "true" : "false"));
+    document.getElementById("layer-note").textContent = NOTES[layer];
+  }
+
+  // ---- demos. steps: ['h',pos] hold, ['t',pos,n] tap n times, ['r',pos] release, ['c'] Esc combo
+  const DEMOS = [
+    { g: "macOS", name: "Switch apps", keys: "⌘Tab", does: "Hold ⌘ and tap Tab to cycle apps.", steps: [["h",12],["t",30,2]], why: "⌘ is on the middle finger and Tab is a thumb tap, so this works with one hand like on a laptop." },
+    { g: "macOS", name: "Launcher", keys: "⌘Space", does: "Spotlight or Raycast.", steps: [["h",12],["t",32]], why: "A quick Space tap stays Space; SYM only turns on when you hold it." },
+    { g: "macOS", name: "Next / previous tab", keys: "⌘⇧] ⌘⇧[", does: "Browser, terminal and editor tabs.", steps: [["h",31],["t",3],["t",3],["t",2]], why: "These have their own keys on NAV, so you don't need to hold three mods." },
+    { g: "macOS", name: "Go to tab 2", keys: "⌘2", does: "Jump straight to a tab by number.", steps: [["h",30],["h",12],["t",7]], why: "Left thumb plus middle finger hold, right hand taps the number." },
+    { g: "macOS", name: "Delete word", keys: "⌥⌫", does: "Delete the previous word.", steps: [["h",31],["h",11],["t",19],["t",19]], why: "Plain ⌥ on NAV, with no timing involved." },
+    { g: "macOS", name: "Select by word", keys: "⇧⌥←", does: "Extend the selection one word left.", steps: [["h",31],["h",13],["t",6],["t",6]], why: "⇧ under the index finger plus the dedicated word-left key." },
+    { g: "Windows & spaces", name: "Window halves", keys: "⌃⌥← ⌃⌥→", does: "Rectangle-style left and right halves.", steps: [["h",31],["h",10],["h",11],["t",15],["t",18]], why: "⌃⌥ are neighbours under pinky and ring, and the arrows are on h and l." },
+    { g: "Windows & spaces", name: "Maximize window", keys: "⌃⌥⏎", does: "Rectangle-style maximize.", steps: [["h",31],["h",10],["h",11],["t",33]], why: "On NAV the right outer thumb is plain ⏎." },
+    { g: "Windows & spaces", name: "Go to Space 3", keys: "⌃3", does: "Switch macOS desktop.", steps: [["h",30],["h",10],["t",8]], why: "The ⌃ for Spaces goes on the pinky because you press it far less often than ⌘." },
+    { g: "Windows & spaces", name: "Workspace 1 → 2", keys: "⌥1 ⌥2", does: "AeroSpace-style workspaces.", steps: [["h",30],["h",11],["t",6],["t",7]], why: "Same gesture as ⌃3, with the ring finger instead of the pinky." },
+    { g: "Linear", name: "Command menu", keys: "⌘K", does: "Open Linear's command menu.", steps: [["h",12],["t",17]], why: "Hold ⌘ on the left hand and tap K, a plain tap even though K also holds ⌘." },
+    { g: "Linear", name: "Copy git branch", keys: "⌘⇧.", does: "Copy the issue's branch name.", steps: [["h",12],["h",13],["t",28]], why: "Middle and index hold together, which is the easiest two-mod chord." },
+    { g: "Gmail", name: "Triage", keys: "j k e", does: "Next, previous, archive.", steps: [["t",16],["t",16],["t",17],["t",2]], why: "Single letters. Taps never trigger the home-row mods." },
+    { g: "Gmail", name: "Send", keys: "⌘⏎", does: "Send the email you're writing.", steps: [["h",12],["t",33]], why: "⌘ from the home row, ⏎ from the thumb." },
+    { g: "Vim", name: "Escape and save", keys: "Esc :w ⏎", does: "Leave insert mode and write.", steps: [["c"],["h",33],["t",19],["r",33],["t",1],["t",33]], why: "Esc is the W+E combo. ; stays on the base layer, so : is thumb ⇧ plus ;." },
+    { g: "Vim", name: "Half page", keys: "⌃d ⌃u", does: "Scroll half a page down, then up.", steps: [["h",19],["t",12],["r",19],["h",10],["t",6]], why: "Always use the ⌃ on the other hand from the letter: right pinky for d, left pinky for u." },
+    { g: "Vim", name: "Window right", keys: "⌃w l", does: "Move to the split on the right.", steps: [["h",19],["t",1],["r",19],["t",18]], why: "Right pinky ⌃ for w, then l as usual." },
+    { g: "Amp", name: "Command palette", keys: "⌃O", does: "Amp CLI command palette.", steps: [["h",10],["t",8]], why: "Left pinky ⌃ with the right ring finger." },
+    { g: "Amp", name: "Interrupt agent", keys: "Esc", does: "Stop the running turn.", steps: [["c"]], why: "Press W and E together. It's always on the base layer." },
+    { g: "Code", name: "Arrow", keys: "=>", does: "Type an arrow function.", steps: [["h",32],["t",12],["t",28]], why: "Both are on SYM: = on the left home row, > bottom right." },
+    { g: "Code", name: "Braces", keys: "{ }", does: "Open and close a block.", steps: [["h",32],["t",6],["t",7]], why: "Openers are in the index column, closers in the middle column." },
+    { g: "Code", name: "Zoom in", keys: "⌘=", does: "Mod plus a symbol.", steps: [["h",17],["h",32],["t",12]], why: "Hold the mod first, then the layer: right ⌘ (K), then Space for SYM, then =." },
+    { g: "Keyboard", name: "Lock NAV on", keys: "NAV · N", does: "Keep NAV on without holding the thumb.", steps: [["h",31],["t",25]], why: "For long scrolling or reading sessions. Tap the ⌫ thumb to go back to base." },
+    { g: "Keyboard", name: "Bluetooth device 2", keys: "SYS · BT 2", does: "Switch paired device.", steps: [["h",31],["h",30],["t",24]], why: "Holding both left thumbs opens SYS, just like your current combo." }
+  ];
+
+  // ---- player
+  const held = new Map(); const tapped = new Set(); let comboFired = false;
+  let cur = 0, timers = [], auto = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function layerFromHeld() {
+    const num = held.has(30) && L.base[30].to, nav = held.has(31);
+    if (held.has(30) && held.has(31)) return "sys";
+    if (held.has(31)) return "nav";
+    if (held.has(30)) return "num";
+    if (held.has(32)) return "sym";
+    return "base";
+  }
+  function holdLabel(i, lay) { const k = L[lay][i]; return (k.c === "hrm" || k.c === "lyr") ? k.s : k.t; }
+  function describe(steps) {
+    // simulate layers to build captions
+    const h = new Set(); const out = [];
+    const lay = () => (h.has(30) && h.has(31)) ? "sys" : h.has(31) ? "nav" : h.has(30) ? "num" : h.has(32) ? "sym" : "base";
+    for (const s of steps) {
+      const L0 = lay();
+      if (s[0] === "c") out.push("Press W + E together → Esc");
+      else if (s[0] === "h") {
+        const k = L.base[s[1]];
+        const isLayer = L0 === "base" && k.to;
+        const isSys = (s[1] === 30 && h.has(31)) || (s[1] === 31 && h.has(30));
+        const lbl = holdLabel(s[1], L0);
+        h.add(s[1]);
+        out.push(isSys ? `Hold the other left thumb too → SYS layer` : isLayer ? `Hold ${k.t} thumb → ${k.s} layer` : `Hold ${L[L0][s[1]].t}${L[L0][s[1]].c === "hrm" ? "" : ""} as ${lbl}`.replace(/^Hold (.+) as \1$/, "Hold $1"));
+      } else if (s[0] === "t") {
+        const k = L[L0][s[1]];
+        out.push(`Tap ${k.t}${k.s && k.c !== "hrm" && k.c !== "lyr" ? " (" + k.s + ")" : ""}${s[2] > 1 ? " ×" + s[2] : ""}`);
+      } else if (s[0] === "r") { const lbl = holdLabel(s[1], L0); h.delete(s[1]); out.push(`Release ${lbl}`); }
+    }
+    return out;
+  }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+  function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
+  function resetKeys() { held.clear(); tapped.clear(); comboFired = false; }
+
+  function show(i, play) {
+    clearTimers(); resetKeys();
+    cur = (i + DEMOS.length) % DEMOS.length;
+    const d = DEMOS[cur];
+    document.querySelectorAll(".demo").forEach((b, j) => b.setAttribute("aria-current", j === cur ? "true" : "false"));
+    document.getElementById("r-app").textContent = d.g;
+    document.getElementById("r-shortcut").textContent = d.keys;
+    document.getElementById("r-does").textContent = d.name + ". " + d.does;
+    document.getElementById("r-why").textContent = d.why;
+    const caps = describe(d.steps);
+    const ol = document.getElementById("r-steps"); ol.innerHTML = "";
+    const lis = caps.map(c => { const li = document.createElement("li"); li.textContent = c; ol.appendChild(li); return li; });
+    layer = "base";
+    if (!play) { // static final state
+      d.steps.forEach(s => { if (s[0] === "h") held.set(s[1], L.base[s[1]].to || ((s[1]===30||s[1]===31)) ? "held-layer" : "held-mod"); if (s[0] === "r") held.delete(s[1]); });
+      layer = layerFromHeld(); lis.forEach(li => li.className = "done"); render(); return;
+    }
+    render();
+    let t = 450;
+    d.steps.forEach((s, n) => {
+      at(t, () => {
+        lis.forEach((li, j) => li.className = j < n ? "done" : j === n ? "on" : "");
+        if (s[0] === "h") {
+          const isThumbLayer = s[1] === 30 || s[1] === 31 || (s[1] === 32 && layer === "base");
+          held.set(s[1], isThumbLayer ? "held-layer" : "held-mod");
+          layer = layerFromHeld(); render();
+        } else if (s[0] === "r") { held.delete(s[1]); layer = layerFromHeld(); render(); }
+        else if (s[0] === "c") {
+          comboFired = true; tapped.add(1); tapped.add(2); render();
+          at(320, () => { comboFired = false; tapped.delete(1); tapped.delete(2); render(); });
+        } else if (s[0] === "t") {
+          const times = s[2] || 1;
+          for (let r = 0; r < times; r++) {
+            at(r * 420, () => { tapped.add(s[1]); render(); });
+            at(r * 420 + 240, () => { tapped.delete(s[1]); render(); });
+          }
+        }
+      });
+      const extra = s[0] === "t" ? (s[2] || 1) * 420 : 0;
+      t += (s[0] === "h" ? 700 : s[0] === "r" ? 450 : 520) + extra;
+    });
+    at(t + 200, () => lis.forEach(li => li.className = "done"));
+    at(t + 1400, () => { resetKeys(); layer = "base"; render(); });
+    at(t + 2000, () => { if (auto) show(cur + 1, true); });
+  }
+
+  // ---- build list
+  const list = document.getElementById("demo-list");
+  const groups = {};
+  DEMOS.forEach((d, i) => {
+    if (!groups[d.g]) {
+      const g = document.createElement("div"); g.className = "group";
+      const n = document.createElement("div"); n.className = "group-name"; n.textContent = d.g; g.appendChild(n);
+      list.appendChild(g); groups[d.g] = g;
+    }
+    const b = document.createElement("button"); b.className = "demo"; b.id = "demo-" + i;
+    const s = document.createElement("span"); s.textContent = d.name;
+    const k = document.createElement("kbd"); k.textContent = d.keys;
+    b.append(s, k);
+    b.addEventListener("click", () => { setAuto(false); show(i, !reduced); });
+    groups[d.g].appendChild(b);
+  });
+
+  const autoBtn = document.getElementById("btn-auto");
+  function setAuto(v) { auto = v; autoBtn.textContent = v ? "Pause tour" : "Play tour"; autoBtn.setAttribute("aria-pressed", v ? "true" : "false"); }
+  autoBtn.addEventListener("click", () => { setAuto(!auto); if (auto) show(cur, true); else clearTimers(); });
+  document.getElementById("btn-replay").addEventListener("click", () => show(cur, !reduced));
+  document.getElementById("btn-next").addEventListener("click", () => show(cur + 1, !reduced));
+  document.querySelectorAll(".tab").forEach(b => b.addEventListener("click", () => {
+    setAuto(false); clearTimers(); resetKeys(); layer = b.dataset.layer; render();
+  }));
+
+  setAuto(auto);
+  show(0, auto);
+})();
+</script>
 </body>
 </html>
