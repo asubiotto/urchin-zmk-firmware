@@ -9,12 +9,12 @@ build:
 
 .PHONY: flashleft
 flashleft:
-	cp build/urchin_left.uf2 /Volumes/NICENANO/urchin_left.uf2
+	cp -X build/urchin_left.uf2 /Volumes/NICENANO/urchin_left.uf2
 
 .PHONY: flashright
 flashright:
-	cp build/urchin_right.uf2 /Volumes/NICENANO/urchin_right.uf2
+	cp -X build/urchin_right.uf2 /Volumes/NICENANO/urchin_right.uf2
 
 .PHONY: flashreset
 flashreset:
-	cp build/urchin_settings_reset.uf2 /Volumes/NICENANO/urchin_settings_reset.uf2
+	cp -X build/urchin_settings_reset.uf2 /Volumes/NICENANO/urchin_settings_reset.uf2
