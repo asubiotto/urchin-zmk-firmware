@@ -38,14 +38,18 @@
         // "Timeless" home-row mods (urob/zmk-config):
         // - only become a mod when the next key is on the OTHER hand or a thumb,
         // - decided on release, so fast same-hand rolls stay letters,
-        // - always a tap if pressed within 150 ms of the previous key (mid-word).
+        // - always a tap if pressed within 100 ms of the previous key (mid-word).
+        // Tuning: if mods misfire while typing fast, raise require-prior-idle-ms
+        // in 10-20 ms steps (rule of thumb: 10500 / WPM). If mods feel slow to
+        // engage, lower it. tapping-term-ms only matters for same-hand holds and
+        // a mod held on its own; cross-hand chords resolve on release.
         hml: home_row_mod_left {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             flavor = "balanced";
-            tapping-term-ms = <280>;
+            tapping-term-ms = <200>;
             quick-tap-ms = <175>;
-            require-prior-idle-ms = <150>;
+            require-prior-idle-ms = <100>;
             hold-trigger-key-positions = <KEYS_R THUMBS>;
             hold-trigger-on-release;
             bindings = <&kp>, <&kp>;
@@ -55,9 +59,9 @@
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
             flavor = "balanced";
-            tapping-term-ms = <280>;
+            tapping-term-ms = <200>;
             quick-tap-ms = <175>;
-            require-prior-idle-ms = <150>;
+            require-prior-idle-ms = <100>;
             hold-trigger-key-positions = <KEYS_L THUMBS>;
             hold-trigger-on-release;
             bindings = <&kp>, <&kp>;
