@@ -19,7 +19,7 @@ Open [`keymap.html`](./keymap.html) in a browser for an interactive view of ever
 - **Thumbs:** `Tab`/NUM, `⌫`/NAV (left) · `Space`/SYM, `⏎`/`⇧` (right). Tap for the key, hold for the layer or mod.
 - **Esc:** press `X` + `C` together.
 - **NAV** (hold `⌫`): arrows on `hjkl`, word/line jumps, page up/down, tab and history keys, undo/cut/copy/paste/redo, plain mods on the left home row. Tap `N` to lock NAV on, tap `⌫` to leave.
-- **NUM** (hold `Tab`): right-hand numpad (1-2-3 on top, 0 on the thumb), plain mods on the left home row.
+- **NUM** (hold `Tab`): right-hand numpad (7-8-9 on top, 1-2-3 on the bottom row, 0 on the thumb), plain mods on the left home row.
 - **SYM** (hold `Space`): all symbols.
 - **SYS** (hold both left thumbs): Bluetooth profiles, bootloader, ZMK Studio unlock, media, volume, brightness.
 

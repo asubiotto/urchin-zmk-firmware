@@ -116,11 +116,11 @@
   @off
 )
 
-;; Hold the Tab thumb (Kinesis Backspace). Right-hand numpad, 1-2-3 on top.
+;; Hold the Tab thumb (Kinesis Backspace). Right-hand numpad, 7-8-9 on top, 1-2-3 on the bottom row.
 (deflayer num
-  XX     XX     XX       XX       XX       S-8    1      2      3      min
+  XX     XX     XX       XX       XX       S-8    7      8      9      min
   lctl   lalt   lmet     lsft     XX       .      4      5      6      S-eql
-  XX     XX     XX       XX       XX       comm   7      8      9      eql
+  XX     XX     XX       XX       XX       comm   1      2      3      eql
                 _        @bspS                    0      .
   @off
 )

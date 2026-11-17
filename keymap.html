@@ -184,7 +184,7 @@ ol.steps li.done { color: var(--fg); }
     <div class="note"><h3>Mods on the home row</h3><p>⌃ ⌥ ⌘ ⇧ under pinky, ring, middle, index on both hands. Hold one, then press a key on the other hand. Uses urob's timeless settings so fast typing doesn't trigger mods.</p></div>
     <div class="note"><h3>Plain mods on NAV and NUM</h3><p>When a left thumb holds NAV or NUM, the left home row becomes ordinary modifier keys. ⌃⌥→ or ⌥3 never depends on timing.</p></div>
     <div class="note"><h3>hjkl are the arrows</h3><p>Vim, Gmail, Linear and window managers already use h j k l, so the arrows live on those keys too.</p></div>
-    <div class="note"><h3>Numbers opposite the mods</h3><p>A right-hand numpad, 1-2-3 on top, held from the left thumb. Every ⌘/⌃/⌥ + number uses both hands.</p></div>
+    <div class="note"><h3>Numbers opposite the mods</h3><p>A right-hand numpad laid out like a calculator (1-2-3 on the bottom row), held from the left thumb. Every ⌘/⌃/⌥ + number uses both hands.</p></div>
   </section>
 </div>
 
@@ -212,10 +212,10 @@ ol.steps li.done { color: var(--fg); }
       K("Tab","NUM→SYS","lyr","num"),K("NAV","held","this"),K("Space"),K("⏎")
     ],
     num: [
-      B(),B(),B(),B(),B(), K("*"),K("1"),K("2"),K("3"),K("-"),
+      B(),B(),B(),B(),B(), K("*"),K("7"),K("8"),K("9"),K("-"),
       K("⌃","","mod"),K("⌥","","mod"),K("⌘","","mod"),K("⇧","","mod"),B(),
       K("."),K("4"),K("5"),K("6"),K("+"),
-      B(),B(),B(),B(),B(), K(","),K("7"),K("8"),K("9"),K("="),
+      B(),B(),B(),B(),B(), K(","),K("1"),K("2"),K("3"),K("="),
       K("NUM","held","this"),K("⌫","NAV→SYS","lyr","nav"),K("0"),K(".")
     ],
     sym: [
@@ -310,13 +310,13 @@ ol.steps li.done { color: var(--fg); }
     { g: "macOS", name: "Switch apps", keys: "⌘Tab", does: "Hold ⌘ and tap Tab to cycle apps.", steps: [["h",12],["t",30,2]], why: "⌘ is on the middle finger and Tab is a thumb tap, so this works with one hand like on a laptop." },
     { g: "macOS", name: "Launcher", keys: "⌘Space", does: "Spotlight or Raycast.", steps: [["h",12],["t",32]], why: "A quick Space tap stays Space; SYM only turns on when you hold it." },
     { g: "macOS", name: "Next / previous tab", keys: "⌘⇧] ⌘⇧[", does: "Browser, terminal and editor tabs.", steps: [["h",31],["t",3],["t",3],["t",2]], why: "These have their own keys on NAV, so you don't need to hold three mods." },
-    { g: "macOS", name: "Go to tab 2", keys: "⌘2", does: "Jump straight to a tab by number.", steps: [["h",30],["h",12],["t",7]], why: "Left thumb plus middle finger hold, right hand taps the number." },
+    { g: "macOS", name: "Go to tab 2", keys: "⌘2", does: "Jump straight to a tab by number.", steps: [["h",30],["h",12],["t",27]], why: "Left thumb plus middle finger hold, right hand taps the number." },
     { g: "macOS", name: "Delete word", keys: "⌥⌫", does: "Delete the previous word.", steps: [["h",31],["h",11],["t",19],["t",19]], why: "Plain ⌥ on NAV, with no timing involved." },
     { g: "macOS", name: "Select by word", keys: "⇧⌥←", does: "Extend the selection one word left.", steps: [["h",31],["h",13],["t",6],["t",6]], why: "⇧ under the index finger plus the dedicated word-left key." },
     { g: "Windows & spaces", name: "Window halves", keys: "⌃⌥← ⌃⌥→", does: "Rectangle-style left and right halves.", steps: [["h",31],["h",10],["h",11],["t",15],["t",18]], why: "⌃⌥ are neighbours under pinky and ring, and the arrows are on h and l." },
     { g: "Windows & spaces", name: "Maximize window", keys: "⌃⌥⏎", does: "Rectangle-style maximize.", steps: [["h",31],["h",10],["h",11],["t",33]], why: "On NAV the right outer thumb is plain ⏎." },
-    { g: "Windows & spaces", name: "Go to Space 3", keys: "⌃3", does: "Switch macOS desktop.", steps: [["h",30],["h",10],["t",8]], why: "The ⌃ for Spaces goes on the pinky because you press it far less often than ⌘." },
-    { g: "Windows & spaces", name: "Workspace 1 → 2", keys: "⌥1 ⌥2", does: "AeroSpace-style workspaces.", steps: [["h",30],["h",11],["t",6],["t",7]], why: "Same gesture as ⌃3, with the ring finger instead of the pinky." },
+    { g: "Windows & spaces", name: "Go to Space 3", keys: "⌃3", does: "Switch macOS desktop.", steps: [["h",30],["h",10],["t",28]], why: "The ⌃ for Spaces goes on the pinky because you press it far less often than ⌘." },
+    { g: "Windows & spaces", name: "Workspace 1 → 2", keys: "⌥1 ⌥2", does: "AeroSpace-style workspaces.", steps: [["h",30],["h",11],["t",26],["t",27]], why: "Same gesture as ⌃3, with the ring finger instead of the pinky." },
     { g: "Linear", name: "Command menu", keys: "⌘K", does: "Open Linear's command menu.", steps: [["h",12],["t",17]], why: "Hold ⌘ on the left hand and tap K, a plain tap even though K also holds ⌘." },
     { g: "Linear", name: "Copy git branch", keys: "⌘⇧.", does: "Copy the issue's branch name.", steps: [["h",12],["h",13],["t",28]], why: "Middle and index hold together, which is the easiest two-mod chord." },
     { g: "Gmail", name: "Triage", keys: "j k e", does: "Next, previous, archive.", steps: [["t",16],["t",16],["t",17],["t",2]], why: "Single letters. Taps never trigger the home-row mods." },
