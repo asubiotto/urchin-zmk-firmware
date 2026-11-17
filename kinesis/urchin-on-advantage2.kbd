@@ -33,6 +33,7 @@
   a    s    d    f    g    h    j    k    l    scln
   z    x    c    v    b    n    m    comm .    /
             bspc del            ret  spc
+  ins  ;; Kinesis Insert key = toggle Urchin layout on/off
 )
 
 (defhands
@@ -78,11 +79,15 @@
   lock (layer-switch navlock)
   unlk (layer-switch base)
   cw   (caps-word 2000)
+
+  ;; Insert toggles between the Urchin layout and the stock Kinesis layout
+  off  (layer-switch plain)
+  on   (layer-switch base)
 )
 
 ;; W + E = Esc (base layer only)
 (defchordsv2
-  (w e) esc 35 all-released (navlock nav num sym sys)
+  (w e) esc 35 all-released (navlock nav num sym sys plain)
 )
 
 (deflayer base
@@ -90,6 +95,7 @@
   @a   @s   @d   @f   g    h    @j   @k   @l   @;
   z    x    c    v    b    n    m    comm .    /
             @tabn @bspn         @spcs @rets
+  @off
 )
 
 ;; NAV locked on (tap N while holding NAV). Tap N or the ⌫ thumb to leave.
@@ -98,6 +104,7 @@
   lctl   lalt   lmet     lsft     @cw      left   down   up     rght   bspc
   M-z    M-x    M-c      M-v      M-S-z    @unlk  pgdn   pgup   XX     XX
                 @tabn    @unlk                    spc    ret
+  @off
 )
 
 ;; Hold the ⌫ thumb (Kinesis Delete).
@@ -106,6 +113,7 @@
   lctl   lalt   lmet     lsft     @cw      left   down   up     rght   bspc
   M-z    M-x    M-c      M-v      M-S-z    @lock  pgdn   pgup   XX     XX
                 @tabS    _                        spc    ret
+  @off
 )
 
 ;; Hold the Tab thumb (Kinesis Backspace). Right-hand numpad, 1-2-3 on top.
@@ -114,6 +122,7 @@
   lctl   lalt   lmet     lsft     XX       .      4      5      6      S-eql
   XX     XX     XX       XX       XX       comm   7      8      9      eql
                 _        @bspS                    0      .
+  @off
 )
 
 ;; Hold Space (Kinesis Enter).
@@ -122,6 +131,7 @@
   grv    min    eql      apo      S-apo    bksl   S-9    S-0    S-scln scln
   S-grv  S-min  S-eql    S-bksl   S-/      S-comm lbrc   rbrc   S-.    /
                 _        _                        _      _
+  @off
 )
 
 ;; Hold both left thumbs. (Bluetooth/bootloader/Studio keys don't apply here.)
@@ -130,4 +140,14 @@
   XX     XX     XX       XX       XX       XX     vold   volu   mute   XX
   XX     XX     XX       XX       XX       XX     brdn   brup   XX     XX
                 _        _                        XX     XX
+  @off
+)
+
+;; Stock Kinesis: every key does what it says. Press Insert to go back.
+(deflayer plain
+  q    w    e    r    t    y    u    i    o    p
+  a    s    d    f    g    h    j    k    l    scln
+  z    x    c    v    b    n    m    comm .    /
+            bspc del            ret  spc
+  @on
 )

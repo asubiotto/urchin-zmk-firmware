@@ -17,6 +17,10 @@ through [kanata](https://github.com/jtroo/kanata).
 | Enter | right inner | Space / SYM |
 | Space | right outer | ⏎ / ⇧ |
 
+**Switching back:** press the Kinesis **Insert** key (bottom row, left hand) to
+turn the Urchin layout off and get the stock Kinesis. Press Insert again to
+turn it back on. To stop kanata entirely, press `Ctrl+C` in its terminal.
+
 Everything else on the Kinesis (number row, F-keys, arrows, Cmd/Alt/Ctrl and
 Home/End/PgUp/PgDn thumb keys) passes through unchanged. To force yourself to
 use the layers, set those keys to `XX` by adding them to `defsrc` and to every
