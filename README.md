@@ -24,3 +24,8 @@ Open [`keymap.html`](./keymap.html) in a browser for an interactive view of ever
 - **SYS** (hold both left thumbs): Bluetooth profiles, bootloader, ZMK Studio unlock, media, volume, brightness.
 
 Originally based on the keymap by duckyb, inspired by [Seniply by Stevep99](https://stevep99.github.io/seniply/).
+
+## Extras
+
+- [`kinesis/`](./kinesis/): the same layout on a Kinesis Advantage2 through kanata on macOS, for practicing on the Kinesis.
+- [`stand/`](./stand/): 3D-printable tenting stand with a palm rest for each half, sized for a Bambu Lab A1 mini.
