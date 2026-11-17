@@ -32,7 +32,10 @@ and the config doesn't touch those.
 
 ## Setup (macOS)
 
-1. Install the Karabiner-DriverKit-VirtualHIDDevice **v6.2.0** `.pkg`. Activate it as described in
+1. Install the Karabiner-DriverKit-VirtualHIDDevice **v6.2.0** `.pkg`.
+   The driver version has to match kanata's: kanata 1.12.x (the current stable
+   release, which Homebrew installs) only talks to driver v6.2.0. Driver v8
+   needs kanata 1.13, which is still a prerelease. Activate it as described in
    [kanata's macOS guide](https://github.com/jtroo/kanata/blob/main/docs/setup-macos.md).
    If Karabiner-Elements is running, quit it: only one remapper can grab a keyboard.
 2. Install kanata **1.12.0 or newer**:
