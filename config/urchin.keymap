@@ -92,12 +92,12 @@
     combos {
         compatible = "zmk,combos";
 
-        // W + E pressed together = Esc. Short window + prior-idle so
-        // typing "we" mid-word never fires it.
+        // X + C pressed together = Esc. Short window + prior-idle so
+        // typing "xc" mid-word never fires it.
         combo_esc {
             timeout-ms = <35>;
             require-prior-idle-ms = <150>;
-            key-positions = <1 2>;
+            key-positions = <21 22>;
             bindings = <&kp ESC>;
             layers = <BASE>;
         };
@@ -148,13 +148,13 @@
             >;
         };
 
-        // Hold the Tab thumb. Right-hand numpad (1-2-3 on top), plain mods on the left.
+        // Hold the Tab thumb. Right-hand numpad (7-8-9 on top, 1-2-3 on the bottom row), plain mods on the left.
         num_layer {
             display-name = "Num";
             bindings = <
-            &none          &none          &none            &none            &none          &kp STAR      &kp N1        &kp N2        &kp N3        &kp MINUS
+            &none          &none          &none            &none            &none          &kp STAR      &kp N7        &kp N8        &kp N9        &kp MINUS
             &kp LCTRL      &kp LALT       &kp LGUI         &kp LSHFT        &none          &kp DOT       &kp N4        &kp N5        &kp N6        &kp PLUS
-            &none          &none          &none            &none            &none          &kp COMMA     &kp N7        &kp N8        &kp N9        &kp EQUAL
+            &none          &none          &none            &none            &none          &kp COMMA     &kp N1        &kp N2        &kp N3        &kp EQUAL
                                           &trans           &thl NAV BSPC                   &kp N0        &kp DOT
             >;
         };

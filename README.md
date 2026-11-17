@@ -17,10 +17,15 @@ Open [`keymap.html`](./keymap.html) in a browser for an interactive view of ever
 
 - **Base:** plain QWERTY. Home-row mods `⌃ ⌥ ⌘ ⇧` on pinky / ring / middle / index, mirrored on both hands ("timeless" settings from [urob/zmk-config](https://github.com/urob/zmk-config)).
 - **Thumbs:** `Tab`/NUM, `⌫`/NAV (left) · `Space`/SYM, `⏎`/`⇧` (right). Tap for the key, hold for the layer or mod.
-- **Esc:** press `W` + `E` together.
+- **Esc:** press `X` + `C` together.
 - **NAV** (hold `⌫`): arrows on `hjkl`, word/line jumps, page up/down, tab and history keys, undo/cut/copy/paste/redo, plain mods on the left home row. Tap `N` to lock NAV on, tap `⌫` to leave.
-- **NUM** (hold `Tab`): right-hand numpad (1-2-3 on top, 0 on the thumb), plain mods on the left home row.
+- **NUM** (hold `Tab`): right-hand numpad (7-8-9 on top, 1-2-3 on the bottom row, 0 on the thumb), plain mods on the left home row.
 - **SYM** (hold `Space`): all symbols.
 - **SYS** (hold both left thumbs): Bluetooth profiles, bootloader, ZMK Studio unlock, media, volume, brightness.
 
 Originally based on the keymap by duckyb, inspired by [Seniply by Stevep99](https://stevep99.github.io/seniply/).
+
+## Extras
+
+- [`kinesis/`](./kinesis/): the same layout on a Kinesis Advantage2 through kanata on macOS, for practicing on the Kinesis.
+- [`stand/`](./stand/): 3D-printable tenting stand with a palm rest for each half, sized for a Bambu Lab A1 mini.

@@ -1,0 +1,153 @@
+;; Urchin layout on a Kinesis Advantage2 (macOS) — kanata config
+;;
+;; Mirrors config/urchin.keymap: same 34 keys, same layers, same
+;; "timeless" home-row mods, same thumb layer-taps, X+C = Esc.
+;; Every other Kinesis key (number row, F-keys, arrows, Ctrl/Cmd/Alt/Home/End/
+;; PgUp/PgDn thumb keys) passes through unchanged.
+;;
+;; Needs kanata >= 1.12.0 (tap-hold-opposite-hand). See kinesis/README.md.
+;;
+;; Thumbs: Urchin outer/inner order is kept, so muscle memory transfers:
+;;
+;;   Kinesis key  | Urchin thumb      | tap / hold
+;;   -------------+-------------------+-------------
+;;   Backspace    | 30 left outer     | Tab   / NUM
+;;   Delete       | 31 left inner     | ⌫     / NAV
+;;   Enter        | 32 right inner    | Space / SYM
+;;   Space        | 33 right outer    | ⏎     / ⇧
+
+(defcfg
+  ;; IMPORTANT: only grab the Kinesis. Without this kanata would also grab the
+  ;; Urchin (over Bluetooth) and the MacBook keyboard and remap them a second
+  ;; time. Run `sudo kanata --list` and paste the exact name it prints.
+  macos-dev-names-include (
+    "Advantage2 Keyboard"
+  )
+  process-unmapped-keys no
+  concurrent-tap-hold yes      ;; required by defchordsv2
+  chords-v2-min-idle 150       ;; = require-prior-idle-ms of the Esc combo
+)
+
+(defsrc
+  q    w    e    r    t    y    u    i    o    p
+  a    s    d    f    g    h    j    k    l    scln
+  z    x    c    v    b    n    m    comm .    /
+            bspc del            ret  spc
+  ins  ;; Kinesis Insert key = toggle Urchin layout on/off
+)
+
+(defhands
+  (left  q w e r t a s d f g z x c v b)
+  (right y u i o p h j k l scln n m comm . /))
+
+(defvar
+  tt 200   ;; tapping-term-ms
+  qt 175   ;; quick-tap-ms
+)
+
+(deftemplate hrm (key mod)
+  (tap-hold-opposite-hand-release $tt $key $mod
+    (timeout hold)
+    (same-hand ignore)              ;; lets ⌘⇧ etc. be held on one hand
+    (neutral-keys bspc del ret spc) ;; thumbs count as "other hand" ...
+    (neutral hold)                  ;; ... like THUMBS in hold-trigger-key-positions
+    (require-prior-idle 100)
+    (tap-repress-timeout $qt))
+)
+
+(defalias
+  ;; home-row mods: ⌃ ⌥ ⌘ ⇧ on pinky / ring / middle / index, mirrored
+  a (t! hrm a lctl)
+  s (t! hrm s lalt)
+  d (t! hrm d lmet)
+  f (t! hrm f lsft)
+  j (t! hrm j lsft)
+  k (t! hrm k lmet)
+  l (t! hrm l lalt)
+  ; (t! hrm scln lctl)
+
+  ;; thumbs (balanced hold-tap ~ tap-hold-release)
+  tabn (tap-hold-release $qt $tt tab  (layer-while-held num))
+  bspn (tap-hold-release $qt $tt bspc (layer-while-held nav))
+  spcs (tap-hold-release $qt $tt spc  (layer-while-held sym))
+  rets (tap-hold-release $qt $tt ret  lsft)
+
+  ;; "conditional layer": NAV + NUM thumbs held together = SYS
+  tabS (tap-hold-release $qt $tt tab  (layer-while-held sys))
+  bspS (tap-hold-release $qt $tt bspc (layer-while-held sys))
+
+  lock (layer-switch navlock)
+  unlk (layer-switch base)
+  cw   (caps-word 2000)
+
+  ;; Insert toggles between the Urchin layout and the stock Kinesis layout
+  off  (layer-switch plain)
+  on   (layer-switch base)
+)
+
+;; X + C = Esc (base layer only)
+(defchordsv2
+  (x c) esc 35 all-released (navlock nav num sym sys plain)
+)
+
+(deflayer base
+  q    w    e    r    t    y    u    i    o    p
+  @a   @s   @d   @f   g    h    @j   @k   @l   @;
+  z    x    c    v    b    n    m    comm .    /
+            @tabn @bspn         @spcs @rets
+  @off
+)
+
+;; NAV locked on (tap N while holding NAV). Tap N or the ⌫ thumb to leave.
+(deflayer navlock
+  M-grv  M-lbrc M-S-lbrc M-S-rbrc M-rbrc   M-left A-left A-rght M-rght del
+  lctl   lalt   lmet     lsft     @cw      left   down   up     rght   bspc
+  M-z    M-x    M-c      M-v      M-S-z    @unlk  pgdn   pgup   XX     XX
+                @tabn    @unlk                    spc    ret
+  @off
+)
+
+;; Hold the ⌫ thumb (Kinesis Delete).
+(deflayer nav
+  M-grv  M-lbrc M-S-lbrc M-S-rbrc M-rbrc   M-left A-left A-rght M-rght del
+  lctl   lalt   lmet     lsft     @cw      left   down   up     rght   bspc
+  M-z    M-x    M-c      M-v      M-S-z    @lock  pgdn   pgup   XX     XX
+                @tabS    _                        spc    ret
+  @off
+)
+
+;; Hold the Tab thumb (Kinesis Backspace). Right-hand numpad, 7-8-9 on top, 1-2-3 on the bottom row.
+(deflayer num
+  XX     XX     XX       XX       XX       S-8    7      8      9      min
+  lctl   lalt   lmet     lsft     XX       .      4      5      6      S-eql
+  XX     XX     XX       XX       XX       comm   1      2      3      eql
+                _        @bspS                    0      .
+  @off
+)
+
+;; Hold Space (Kinesis Enter).
+(deflayer sym
+  S-1    S-2    S-3      S-4      S-5      S-6    S-lbrc S-rbrc S-8    S-7
+  grv    min    eql      apo      S-apo    bksl   S-9    S-0    S-scln scln
+  S-grv  S-min  S-eql    S-bksl   S-/      S-comm lbrc   rbrc   S-.    /
+                _        _                        _      _
+  @off
+)
+
+;; Hold both left thumbs. (Bluetooth/bootloader/Studio keys don't apply here.)
+(deflayer sys
+  XX     XX     XX       XX       XX       XX     prev   pp     next   XX
+  XX     XX     XX       XX       XX       XX     vold   volu   mute   XX
+  XX     XX     XX       XX       XX       XX     brdn   brup   XX     XX
+                _        _                        XX     XX
+  @off
+)
+
+;; Stock Kinesis: every key does what it says. Press Insert to go back.
+(deflayer plain
+  q    w    e    r    t    y    u    i    o    p
+  a    s    d    f    g    h    j    k    l    scln
+  z    x    c    v    b    n    m    comm .    /
+            bspc del            ret  spc
+  @on
+)
