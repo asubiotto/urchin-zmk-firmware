@@ -151,6 +151,7 @@ ol.steps li.done { color: var(--fg); }
       <button class="tab" id="tab-num" data-layer="num" aria-pressed="false">NUM · hold Tab</button>
       <button class="tab" id="tab-sym" data-layer="sym" aria-pressed="false">SYM · hold Space</button>
       <button class="tab" id="tab-sys" data-layer="sys" aria-pressed="false">SYS · both left thumbs</button>
+      <button class="tab" id="tab-fun" data-layer="fun" aria-pressed="false">FUN · both inner thumbs</button>
     </div>
     <p class="layer-note" id="layer-note"></p>
     <div class="board-scroll"><svg class="board" id="board" viewBox="0 0 678 296" role="img" aria-label="Urchin keyboard layout"></svg></div>
@@ -209,7 +210,7 @@ ol.steps li.done { color: var(--fg); }
       K("←"),K("↓"),K("↑"),K("→"),K("⌫"),
       K("⌘Z","undo"),K("⌘X","cut"),K("⌘C","copy"),K("⌘V","paste"),K("⌘⇧Z","redo"),
       K("Lock","NAV"),K("PgDn"),K("PgUp"),B(),B(),
-      K("Tab","NUM→SYS","lyr","num"),K("NAV","held","this"),K("Space"),K("⏎")
+      K("Tab","NUM→SYS","lyr","num"),K("NAV","held","this"),K("Space","SYM→FUN","lyr","sym"),K("⏎")
     ],
     num: [
       B(),B(),B(),B(),B(), K("*"),K("7"),K("8"),K("9"),K("-"),
@@ -222,13 +223,20 @@ ol.steps li.done { color: var(--fg); }
       K("!"),K("@"),K("#"),K("$"),K("%"), K("^"),K("{"),K("}"),K("*"),K("&"),
       K("`"),K("-"),K("="),K("'"),K('"'), K("\\"),K("("),K(")"),K(":"),K(";"),
       K("~"),K("_"),K("+"),K("|"),K("?"), K("<"),K("["),K("]"),K(">"),K("/"),
-      B(),B(),K("SYM","held","this"),B()
+      B(),K("⌫","NAV→FUN","lyr","nav"),K("SYM","held","this"),B()
     ],
     sys: [
       K("Boot"),B(),B(),K("BT","clear"),K("BT 0"), K("BT 3"),K("⏮"),K("⏯"),K("⏭"),K("Boot"),
       B(),B(),B(),B(),K("BT 1"), K("BT 4"),K("Vol−"),K("Vol+"),K("Mute"),B(),
       K("Studio","unlock"),B(),B(),B(),K("BT 2"), K("BT 5"),K("Bri−"),K("Bri+"),B(),K("Studio","unlock"),
       K("NUM","held","this"),K("NAV","held","this"),B(),B()
+    ],
+    fun: [
+      B(),B(),B(),B(),B(), K("F12"),K("F7"),K("F8"),K("F9"),B(),
+      K("⌃","","mod"),K("⌥","","mod"),K("⌘","","mod"),K("⇧","","mod"),B(),
+      K("F11"),K("F4"),K("F5"),K("F6"),B(),
+      B(),B(),B(),B(),B(), K("F10"),K("F1"),K("F2"),K("F3"),B(),
+      B(),K("NAV","held","this"),K("SYM","held","this"),B()
     ]
   };
   const NOTES = {
@@ -236,6 +244,7 @@ ol.steps li.done { color: var(--fg); }
     nav: "Hold the ⌫ thumb. Right hand: hjkl arrows, word and line jumps, page up/down. Left hand: plain mods, tab and history keys on top, undo/cut/copy/paste/redo on the bottom for one-handed use beside the mouse. Tap N to lock NAV on; tap the ⌫ thumb to leave.",
     num: "Hold the Tab thumb. Right-hand numpad with 0 on the thumb. Left home row: plain mods, so ⌘2, ⌃3 or ⌥⇧4 split across both hands.",
     sym: "Hold Space. The left top row is Shift+1–5 where you expect it. Openers { ( [ are in the index column and closers } ) ] in the middle column.",
+    fun: "Hold both inner thumbs (⌫ + Space). F-keys sit where the NUM digits are (F7-F8-F9 on top, F1-F2-F3 on the bottom row), F10-F12 in the inner column. Left home row: plain mods, so ⌥F7 is ⌥ on the left ring finger plus F7 on the right index.",
     sys: "Hold both left thumbs, the same gesture as your current settings combo. Bluetooth profiles, bootloader, ZMK Studio unlock, media, volume and brightness."
   };
   const COMBOS = [{ a: 21, b: 22, label: "Esc", layer: "base" }];
@@ -330,6 +339,7 @@ ol.steps li.done { color: var(--fg); }
     { g: "Code", name: "Braces", keys: "{ }", does: "Open and close a block.", steps: [["h",32],["t",6],["t",7]], why: "Openers are in the index column, closers in the middle column." },
     { g: "Code", name: "Zoom in", keys: "⌘=", does: "Mod plus a symbol.", steps: [["h",17],["h",32],["t",12]], why: "Hold the mod first, then the layer: right ⌘ (K), then Space for SYM, then =." },
     { g: "Keyboard", name: "Lock NAV on", keys: "NAV · N", does: "Keep NAV on without holding the thumb.", steps: [["h",31],["t",25]], why: "For long scrolling or reading sessions. Tap the ⌫ thumb to go back to base." },
+    { g: "macOS", name: "Option + F7", keys: "⌥F7", does: "F-key with a modifier.", steps: [["h",31],["h",32],["h",11],["t",6]], why: "Both inner thumbs open FUN. ⌥ stays on the left ring finger, F7 is where 7 is on NUM." },
     { g: "Keyboard", name: "Bluetooth device 2", keys: "SYS · BT 2", does: "Switch paired device.", steps: [["h",31],["h",30],["t",24]], why: "Holding both left thumbs opens SYS, just like your current combo." }
   ];
 
@@ -341,6 +351,7 @@ ol.steps li.done { color: var(--fg); }
   function layerFromHeld() {
     const num = held.has(30) && L.base[30].to, nav = held.has(31);
     if (held.has(30) && held.has(31)) return "sys";
+    if (held.has(31) && held.has(32)) return "fun";
     if (held.has(31)) return "nav";
     if (held.has(30)) return "num";
     if (held.has(32)) return "sym";
@@ -350,7 +361,7 @@ ol.steps li.done { color: var(--fg); }
   function describe(steps) {
     // simulate layers to build captions
     const h = new Set(); const out = [];
-    const lay = () => (h.has(30) && h.has(31)) ? "sys" : h.has(31) ? "nav" : h.has(30) ? "num" : h.has(32) ? "sym" : "base";
+    const lay = () => (h.has(30) && h.has(31)) ? "sys" : (h.has(31) && h.has(32)) ? "fun" : h.has(31) ? "nav" : h.has(30) ? "num" : h.has(32) ? "sym" : "base";
     for (const s of steps) {
       const L0 = lay();
       if (s[0] === "c") out.push("Press X + C together → Esc");
@@ -358,9 +369,10 @@ ol.steps li.done { color: var(--fg); }
         const k = L.base[s[1]];
         const isLayer = L0 === "base" && k.to;
         const isSys = (s[1] === 30 && h.has(31)) || (s[1] === 31 && h.has(30));
+        const isFun = (s[1] === 32 && h.has(31)) || (s[1] === 31 && h.has(32));
         const lbl = holdLabel(s[1], L0);
         h.add(s[1]);
-        out.push(isSys ? `Hold the other left thumb too → SYS layer` : isLayer ? `Hold ${k.t} thumb → ${k.s} layer` : `Hold ${L[L0][s[1]].t}${L[L0][s[1]].c === "hrm" ? "" : ""} as ${lbl}`.replace(/^Hold (.+) as \1$/, "Hold $1"));
+        out.push(isSys ? `Hold the other left thumb too → SYS layer` : isFun ? `Hold the other inner thumb too → FUN layer` : isLayer ? `Hold ${k.t} thumb → ${k.s} layer` : `Hold ${L[L0][s[1]].t}${L[L0][s[1]].c === "hrm" ? "" : ""} as ${lbl}`.replace(/^Hold (.+) as \1$/, "Hold $1"));
       } else if (s[0] === "t") {
         const k = L[L0][s[1]];
         out.push(`Tap ${k.t}${k.s && k.c !== "hrm" && k.c !== "lyr" ? " (" + k.s + ")" : ""}${s[2] > 1 ? " ×" + s[2] : ""}`);
@@ -395,7 +407,7 @@ ol.steps li.done { color: var(--fg); }
       at(t, () => {
         lis.forEach((li, j) => li.className = j < n ? "done" : j === n ? "on" : "");
         if (s[0] === "h") {
-          const isThumbLayer = s[1] === 30 || s[1] === 31 || (s[1] === 32 && layer === "base");
+          const isThumbLayer = s[1] === 30 || s[1] === 31 || (s[1] === 32 && (layer === "base" || layer === "nav"));
           held.set(s[1], isThumbLayer ? "held-layer" : "held-mod");
           layer = layerFromHeld(); render();
         } else if (s[0] === "r") { held.delete(s[1]); layer = layerFromHeld(); render(); }

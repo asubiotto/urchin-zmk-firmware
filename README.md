@@ -21,6 +21,7 @@ Open [`keymap.html`](./keymap.html) in a browser for an interactive view of ever
 - **NAV** (hold `⌫`): arrows on `hjkl`, word/line jumps, page up/down, tab and history keys, undo/cut/copy/paste/redo, plain mods on the left home row. Tap `N` to lock NAV on, tap `⌫` to leave.
 - **NUM** (hold `Tab`): right-hand numpad (7-8-9 on top, 1-2-3 on the bottom row, 0 on the thumb), plain mods on the left home row.
 - **SYM** (hold `Space`): all symbols.
+- **FUN** (hold both inner thumbs, `⌫` + `Space`): F1–F12 where the NUM digits are (F7-F8-F9 on top, F1-F2-F3 on the bottom row), F10–F12 in the inner column, plain mods on the left home row. Example: `⌥F7` = both inner thumbs + hold `S` + tap `U`.
 - **SYS** (hold both left thumbs): Bluetooth profiles, bootloader, ZMK Studio unlock, media, volume, brightness.
 
 Originally based on the keymap by duckyb, inspired by [Seniply by Stevep99](https://stevep99.github.io/seniply/).
