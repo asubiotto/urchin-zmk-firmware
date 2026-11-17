@@ -1,7 +1,7 @@
 ;; Urchin layout on a Kinesis Advantage2 (macOS) — kanata config
 ;;
 ;; Mirrors config/urchin.keymap: same 34 keys, same layers, same
-;; "timeless" home-row mods, same thumb layer-taps, W+E = Esc.
+;; "timeless" home-row mods, same thumb layer-taps, X+C = Esc.
 ;; Every other Kinesis key (number row, F-keys, arrows, Ctrl/Cmd/Alt/Home/End/
 ;; PgUp/PgDn thumb keys) passes through unchanged.
 ;;
@@ -85,9 +85,9 @@
   on   (layer-switch base)
 )
 
-;; W + E = Esc (base layer only)
+;; X + C = Esc (base layer only)
 (defchordsv2
-  (w e) esc 35 all-released (navlock nav num sym sys plain)
+  (x c) esc 35 all-released (navlock nav num sym sys plain)
 )
 
 (deflayer base

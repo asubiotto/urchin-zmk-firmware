@@ -6,7 +6,7 @@ through [kanata](https://github.com/jtroo/kanata).
 [`urchin-on-advantage2.kbd`](./urchin-on-advantage2.kbd) mirrors
 [`config/urchin.keymap`](../config/urchin.keymap) key for key:
 
-- Same 34 letter keys, home-row mods `⌃ ⌥ ⌘ ⇧`, W+E = Esc.
+- Same 34 letter keys, home-row mods `⌃ ⌥ ⌘ ⇧`, X+C = Esc.
 - NAV, NAV-lock, NUM, SYM and SYS layers, with the same timings (200 ms tap, 175 ms quick-tap, 100 ms prior-idle).
 - Thumbs keep the Urchin's outer/inner order:
 

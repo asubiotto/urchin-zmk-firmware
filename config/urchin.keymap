@@ -92,12 +92,12 @@
     combos {
         compatible = "zmk,combos";
 
-        // W + E pressed together = Esc. Short window + prior-idle so
-        // typing "we" mid-word never fires it.
+        // X + C pressed together = Esc. Short window + prior-idle so
+        // typing "xc" mid-word never fires it.
         combo_esc {
             timeout-ms = <35>;
             require-prior-idle-ms = <150>;
-            key-positions = <1 2>;
+            key-positions = <21 22>;
             bindings = <&kp ESC>;
             layers = <BASE>;
         };

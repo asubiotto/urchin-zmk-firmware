@@ -232,13 +232,13 @@ ol.steps li.done { color: var(--fg); }
     ]
   };
   const NOTES = {
-    base: "Plain QWERTY. Hold a home-row key and it becomes a mod (⌃ ⌥ ⌘ ⇧, mirrored on each hand). Thumbs: tap for Tab, ⌫, Space, ⏎; hold for NUM, NAV, SYM, ⇧. Press W and E together for Esc.",
+    base: "Plain QWERTY. Hold a home-row key and it becomes a mod (⌃ ⌥ ⌘ ⇧, mirrored on each hand). Thumbs: tap for Tab, ⌫, Space, ⏎; hold for NUM, NAV, SYM, ⇧. Press X and C together for Esc.",
     nav: "Hold the ⌫ thumb. Right hand: hjkl arrows, word and line jumps, page up/down. Left hand: plain mods, tab and history keys on top, undo/cut/copy/paste/redo on the bottom for one-handed use beside the mouse. Tap N to lock NAV on; tap the ⌫ thumb to leave.",
     num: "Hold the Tab thumb. Right-hand numpad with 0 on the thumb. Left home row: plain mods, so ⌘2, ⌃3 or ⌥⇧4 split across both hands.",
     sym: "Hold Space. The left top row is Shift+1–5 where you expect it. Openers { ( [ are in the index column and closers } ) ] in the middle column.",
     sys: "Hold both left thumbs, the same gesture as your current settings combo. Bluetooth profiles, bootloader, ZMK Studio unlock, media, volume and brightness."
   };
-  const COMBOS = [{ a: 1, b: 2, label: "Esc", layer: "base" }];
+  const COMBOS = [{ a: 21, b: 22, label: "Esc", layer: "base" }];
 
   // ---- geometry
   const U = 58, G = 5, S = U - G;           // key unit, gap, cap size
@@ -321,11 +321,11 @@ ol.steps li.done { color: var(--fg); }
     { g: "Linear", name: "Copy git branch", keys: "⌘⇧.", does: "Copy the issue's branch name.", steps: [["h",12],["h",13],["t",28]], why: "Middle and index hold together, which is the easiest two-mod chord." },
     { g: "Gmail", name: "Triage", keys: "j k e", does: "Next, previous, archive.", steps: [["t",16],["t",16],["t",17],["t",2]], why: "Single letters. Taps never trigger the home-row mods." },
     { g: "Gmail", name: "Send", keys: "⌘⏎", does: "Send the email you're writing.", steps: [["h",12],["t",33]], why: "⌘ from the home row, ⏎ from the thumb." },
-    { g: "Vim", name: "Escape and save", keys: "Esc :w ⏎", does: "Leave insert mode and write.", steps: [["c"],["h",33],["t",19],["r",33],["t",1],["t",33]], why: "Esc is the W+E combo. ; stays on the base layer, so : is thumb ⇧ plus ;." },
+    { g: "Vim", name: "Escape and save", keys: "Esc :w ⏎", does: "Leave insert mode and write.", steps: [["c"],["h",33],["t",19],["r",33],["t",1],["t",33]], why: "Esc is the X+C combo. ; stays on the base layer, so : is thumb ⇧ plus ;." },
     { g: "Vim", name: "Half page", keys: "⌃d ⌃u", does: "Scroll half a page down, then up.", steps: [["h",19],["t",12],["r",19],["h",10],["t",6]], why: "Always use the ⌃ on the other hand from the letter: right pinky for d, left pinky for u." },
     { g: "Vim", name: "Window right", keys: "⌃w l", does: "Move to the split on the right.", steps: [["h",19],["t",1],["r",19],["t",18]], why: "Right pinky ⌃ for w, then l as usual." },
     { g: "Amp", name: "Command palette", keys: "⌃O", does: "Amp CLI command palette.", steps: [["h",10],["t",8]], why: "Left pinky ⌃ with the right ring finger." },
-    { g: "Amp", name: "Interrupt agent", keys: "Esc", does: "Stop the running turn.", steps: [["c"]], why: "Press W and E together. It's always on the base layer." },
+    { g: "Amp", name: "Interrupt agent", keys: "Esc", does: "Stop the running turn.", steps: [["c"]], why: "Press X and C together. It's always on the base layer." },
     { g: "Code", name: "Arrow", keys: "=>", does: "Type an arrow function.", steps: [["h",32],["t",12],["t",28]], why: "Both are on SYM: = on the left home row, > bottom right." },
     { g: "Code", name: "Braces", keys: "{ }", does: "Open and close a block.", steps: [["h",32],["t",6],["t",7]], why: "Openers are in the index column, closers in the middle column." },
     { g: "Code", name: "Zoom in", keys: "⌘=", does: "Mod plus a symbol.", steps: [["h",17],["h",32],["t",12]], why: "Hold the mod first, then the layer: right ⌘ (K), then Space for SYM, then =." },
@@ -353,7 +353,7 @@ ol.steps li.done { color: var(--fg); }
     const lay = () => (h.has(30) && h.has(31)) ? "sys" : h.has(31) ? "nav" : h.has(30) ? "num" : h.has(32) ? "sym" : "base";
     for (const s of steps) {
       const L0 = lay();
-      if (s[0] === "c") out.push("Press W + E together → Esc");
+      if (s[0] === "c") out.push("Press X + C together → Esc");
       else if (s[0] === "h") {
         const k = L.base[s[1]];
         const isLayer = L0 === "base" && k.to;
@@ -400,8 +400,8 @@ ol.steps li.done { color: var(--fg); }
           layer = layerFromHeld(); render();
         } else if (s[0] === "r") { held.delete(s[1]); layer = layerFromHeld(); render(); }
         else if (s[0] === "c") {
-          comboFired = true; tapped.add(1); tapped.add(2); render();
-          at(320, () => { comboFired = false; tapped.delete(1); tapped.delete(2); render(); });
+          comboFired = true; tapped.add(21); tapped.add(22); render();
+          at(320, () => { comboFired = false; tapped.delete(21); tapped.delete(22); render(); });
         } else if (s[0] === "t") {
           const times = s[2] || 1;
           for (let r = 0; r < times; r++) {
