@@ -62,9 +62,12 @@ tab_t = 1.6;
 // How far the tooth hooks into the other tray (mm)
 tooth = 1.0;
 
-// outline landmarks (outer wall), measured from urchin_outline.scad
-back_y = 97.2;   // highest point of the back edge
-front_y = 5.9;   // flat stretch of the front edge, x = 25..55
+// outline landmarks of the PCB, measured from urchin_outline.scad;
+// the outer wall sits case_wall + clearance + wall beyond them
+pcb_back = 89.6;   // highest point of the back edge
+pcb_front = 13.5;  // flat stretch of the front edge, x = 25..55
+back_y = pcb_back + case_wall + clearance + wall;
+front_y = pcb_front - case_wall - clearance - wall;
 latch_x = 40;
 
 $fn = 64;
