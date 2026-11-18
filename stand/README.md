@@ -58,3 +58,38 @@ openscad -o out/urchin_stand_left.stl -D 'part="left"' urchin_stand.scad
 ```bash
 openscad -o out/urchin_stand_right.stl -D 'part="right"' urchin_stand.scad
 ```
+
+# Travel case
+
+![Bottom tray, and the case closed](out/travel_case_preview.png)
+
+A clamshell made of two trays. Each tray holds one half face-up with the
+keycaps 1 mm below the rim. The two halves are mirror images, so the trays
+close face to face: the bottom tray's lip fits into a groove in the top tray,
+and nothing presses the keys. Closed, it's about 124 × 105 × 35 mm.
+
+| File | What |
+|---|---|
+| `out/urchin_travel_case_bottom.stl` | Holds the **right** half, has the lip |
+| `out/urchin_travel_case_top.stl` | Holds the **left** half, has the groove. Flip it over to close |
+| `urchin_travel_case.scad` | Source |
+
+- The pockets use the same `case_wall` and `clearance` as the stand. If the
+  stand's fit-test ring fits your case, these fit too.
+- Measure `tallest_point`: desk to the highest part of a half (keycap, or the
+  nice!nano if it sits higher). Default 15 mm. Too low, and the halves press
+  each other's keys in the bag.
+- `lip_fit` sets how snugly the trays close. Raise it if they're too tight,
+  lower it if they rattle.
+- An 8 mm groove across both outer faces holds a rubber band or elastic strap.
+- Each tray takes about 40 g and 2–3 h. Print open side up, no supports.
+
+Re-export:
+
+```bash
+openscad -o out/urchin_travel_case_bottom.stl -D 'part="bottom"' urchin_travel_case.scad
+```
+
+```bash
+openscad -o out/urchin_travel_case_top.stl -D 'part="top"' urchin_travel_case.scad
+```

@@ -29,4 +29,4 @@ Originally based on the keymap by duckyb, inspired by [Seniply by Stevep99](http
 ## Extras
 
 - [`kinesis/`](./kinesis/): the same layout on a Kinesis Advantage2 through kanata on macOS, for practicing on the Kinesis.
-- [`stand/`](./stand/): 3D-printable tenting stand with a palm rest for each half, sized for a Bambu Lab A1 mini.
+- [`stand/`](./stand/): 3D-printable tenting stand with a palm rest for each half, and a clamshell travel case, sized for a Bambu Lab A1 mini.
