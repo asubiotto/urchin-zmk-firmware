@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 142 × 169 × 47 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 141 × 169 × 47 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -38,14 +38,16 @@ top (left half, with the foam pad):
 
 | | Advantage2 (measured) | Stand |
 |---|---|---|
-| F key | ~40 mm (highest key) | `f_key_height` = 40 |
-| A key | ~30 mm (S, D also ~30) | `a_key_height` = 30; S 33, D 37 |
+| D key | ~30 mm | `d_key_height` = 30 |
+| F key | ~40 mm (highest key) | 33 mm |
+| S key | ~30 mm | 27 mm |
+| A key | ~30 mm | 23 mm |
 | Palm rest, back-inner corner | ~50 mm | `palm_back_inner` = 50 |
 | Palm rest, back-outer | ~40 mm | 42 mm |
 | Palm rest, front-inner | ~30 mm | 30 mm |
 | Palm rest, front-outer | ~20 mm | 22 mm |
 | Palm rest inner edge | runs through the F key centre | same |
-| Tent | F→A drops 10 mm | 10.7°, worked out from the two |
+| Keyboard tent | F→A drops 10 mm | `tent_angle` = 10.7° (same 10 mm drop) |
 
 The Advantage2's palm rest isn't flat. Its four corners lie on one plane
 that rises about 20 mm toward the keys over ~75 mm (`palm_slope` = 15°)
@@ -53,22 +55,26 @@ and about 10 mm toward the thumbs over ~95 mm (`palm_side` = 6°). The stand's
 palm rest uses the same plane, anchored at the back-inner corner. It's 80 mm wide
 against the Kinesis's ~95 mm, so the front-outer corner ends up 2 mm higher.
 
-The tent comes from the key heights, not Kinesis's 20° figure. 20° put the
-pinky 20 mm off the desk, far lower than on the Advantage2. Its curved wells
-sink S and D too, which a flat board can't copy, so the stand matches F and A
-and puts S and D in between.
+**Why not Kinesis's 20°?** That figure describes how far the key wells are
+tipped, not the key tops. Inside the curved wells S and D sit deeper than F,
+so on your board the home-row tops only drop 10 mm from F to A, which works
+out to about 10.7° across a flat row. At 20° the pinky ended up 20 mm off the desk.
 
-The model lifts the board until the F key top lands on `f_key_height`, then
-places the palm plane. It prints the F key, all four palm corners, the pad
-centre and the thumb key heights in OpenSCAD's console. The F key position
-comes from the Urchin's KiCad file.
+A flat board can't copy the well's curve, so the stand keeps the 10 mm F-to-A
+drop and is placed so D, the middle finger, matches the Advantage2 at 30 mm.
+F and A each come out about 7 mm lower than on the Kinesis.
+
+The palm rest is tilted separately from the board, in desk coordinates. It
+rises 6° toward the thumbs (`palm_side`) and 15° toward the keys (`palm_slope`),
+anchored at 50 mm on its back-inner corner. The OpenSCAD console prints every
+key and palm-corner height.
 
 ## Settings worth trying
 
-- `f_key_height`, `palm_back_inner`: the 10 mm drop between them puts the keys
+- `d_key_height`, `palm_back_inner`: the 20 mm drop between them puts the keys
   below your wrist, like the Advantage2's key wells.
 - `palm_slope`, `palm_side`: the palm rest's own tilts, independent of the board.
-- `a_key_height` (default 30): sets the tent. Or set `tent_set` to a fixed angle (−1 = automatic).
+- `tent_angle` (default 10.7°): keyboard tent. It pivots around D, so more tent raises F and lowers A.
 - `tilt_angle` (default 0°): front-to-back tilt of the board only.
 - `palm_width` (default 80 mm): the inner edge stays on the F key, so this
   sets how far the rest reaches past the board's outer edge. It stops short

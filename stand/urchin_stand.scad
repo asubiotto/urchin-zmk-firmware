@@ -19,10 +19,8 @@ clearance = 0.6;
 key_top_height = 15;
 
 /* [Targets: measured on your Kinesis Advantage2] */
-// Desk to top of the F key (mm). The highest home-row key on the Advantage2
-f_key_height = 40;
-// Desk to top of the A key (mm). Advantage2: A, S and D all ~30. Sets the tent
-a_key_height = 30;
+// Desk to top of the D key (mm). Advantage2: A, S, D ~30, F ~40. The board is placed so D lands here
+d_key_height = 30;
 // Desk to top of the palm pad at its back-inner corner, the corner nearest the F key (mm)
 palm_back_inner = 50;
 // Palm rest rises toward the keys. Advantage2: front 20/30 mm, back 40/50 mm = 20 mm over ~75 mm
@@ -31,8 +29,8 @@ palm_slope = 15; // [0:1:25]
 palm_side = 6; // [0:1:25]
 
 /* [Ergonomics] */
-// Tenting, inner (thumb) edge raised. -1 = work it out from f_key_height - a_key_height
-tent_set = -1; // [-1:1:35]
+// Tenting, inner (thumb) edge raised. 10.7 puts A 10 mm below F, as on your Advantage2
+tent_angle = 10.7; // [0:0.1:35]
 // Front-to-back tilt of the keyboard (the palm rest has its own palm_slope)
 tilt_angle = 0; // [-10:1:10]
 // How deep the case sits in the pocket (mm)
@@ -81,13 +79,8 @@ case_off = case_wall + clearance;
 key_above_rim = key_top_height - pocket_depth;
 // F key centre on the left half, from duckyb/urchin main.kicad_pcb (SW9)
 F_KEY = [63.1, 57.0];
-// A key centre (SW6)
-A_KEY = [9.1, 45.5];
-// tent that puts A (f_key_height - a_key_height) below F:
-// z gain from A to F = sin(t)*dx + cos(t)*sin(tilt)*dy
-_dx = F_KEY[0] - A_KEY[0]; _dy = (F_KEY[1] - A_KEY[1]) * sin(tilt_angle);
-tent_angle = tent_set >= 0 ? tent_set
-    : asin((f_key_height - a_key_height) / norm([_dx, _dy])) - atan2(_dy, _dx);
+// home row centres A, S, D (SW6-SW8), from duckyb/urchin main.kicad_pcb
+A_KEY = [9.1, 45.5]; S_KEY = [27.1, 57.5]; D_KEY = [45.1, 63.5];
 // thumb keys (SW16 inner-left, SW17), for the clearance report
 THUMBS = [[73.0, 19.8], [91.6, 12.1]];
 
@@ -99,12 +92,12 @@ pivot_off = [case_off + rim, 0, 0];
 // height of a local point above the deck pivot, before the base lift
 function zr(p) = (ROT * (p + pivot_off))[2];
 
-// 1) lift the stand so the F key top lands on f_key_height ...
-base_for_f = f_key_height - zr([F_KEY[0], F_KEY[1], key_above_rim]);
+// 1) lift the stand so the D key top lands on d_key_height ...
+base_for_d = d_key_height - zr([D_KEY[0], D_KEY[1], key_above_rim]);
 // ... unless that would leave less than min_floor under the pocket
 floor_pts = [for (x = [-case_off, pcb_w + case_off], y = [-case_off, pcb_h + case_off]) [x, y, -pocket_depth]];
 base_for_floor = min_floor - min([for (p = floor_pts) zr(p)]);
-base = max(base_for_f, base_for_floor);
+base = max(base_for_d, base_for_floor);
 function base_h() = base;
 
 // 2) palm rest: a plane in desk coordinates, inner edge under the F key centre
@@ -120,13 +113,13 @@ pad_x = (x_in + x_out) / 2 - pad_w / 2;
 pad_y = -63;
 
 echo(str("Tent: ", tent_angle, " deg"));
-echo(str("Home row tops A S D F: ", [for (k = [A_KEY, [27.1, 57.5], [45.1, 63.5], F_KEY]) world([k[0], k[1], key_above_rim])[2]], " mm"));
+echo(str("Home row tops A S D F: ", [for (k = [A_KEY, S_KEY, D_KEY, F_KEY]) world([k[0], k[1], key_above_rim])[2]], " mm"));
 echo(str("Palm pad top, front-outer / front-inner / back-inner / back-outer: ",
          [palm_z(x_out, y_front), palm_z(x_in, y_front), palm_z(x_in, y_back), palm_z(x_out, y_back)], " mm"));
 echo(str("Palm pad centre: ", palm_z(pad_x + pad_w / 2, pad_y + pad_d / 2), " mm"));
 echo(str("Thumb key tops: ", [for (t = THUMBS) world([t[0], t[1], key_above_rim])[2]], " mm"));
-if (base_for_floor > base_for_f)
-    echo("WARNING: F key sits higher than f_key_height, to keep min_floor under the pocket");
+if (base_for_floor > base_for_d)
+    echo("WARNING: D key sits higher than d_key_height, to keep min_floor under the pocket");
 
 module pcb() { polygon(URCHIN_PCB_LEFT); }
 // case outline: PCB grown by the wall, notches smoothed shut
