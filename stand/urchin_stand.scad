@@ -8,35 +8,58 @@
 include <urchin_outline.scad>
 
 /* [What to print] */
-part = "left"; // [left, right, fit_test_left, fit_test_right]
+part = "left"; // [left, right, fit_test_left, fit_test_right, pad_template]
 
 /* [Your Urchin case — measure these] */
 // How far the case sticks out past the PCB edge, per side (mm)
 case_wall = 3.0;
 // Extra gap around the case so it drops in (mm)
 clearance = 0.6;
-// Desk to top of the home-row keycaps with the case flat on the desk (mm)
+// Desk to top of the home-row keycaps with the case flat on the desk (mm). NOT YET MEASURED: this shifts every key height 1:1
 key_top_height = 15;
 
+/* [Targets: measured on your Kinesis Advantage2] */
+// Desk to top of the palm pad at its back-inner corner, the corner nearest the F key (mm).
+// Raised automatically if the board can't get low enough for d_below_palm
+palm_target = 50;
+// How far the D key top sits below that corner (mm). Advantage2: 50 vs 30 = 20
+d_below_palm = 20;
+// Palm rest rises toward the keys. Advantage2: front 20/30 mm, back 40/50 mm = 20 mm over ~75 mm
+palm_slope = 15; // [0:1:25]
+// Palm rest rises toward the thumbs. Advantage2: 10 mm over ~95 mm
+palm_side = 6; // [0:1:25]
+
 /* [Ergonomics] */
-// Tenting: inner (thumb) edge raised. Kinesis Advantage ~ 10-20 deg
-tent_angle = 15; // [0:1:35]
-// Front-to-back tilt. Negative = back lower (like sitting in a key well)
-tilt_angle = -3; // [-10:1:10]
+// Tenting, inner (thumb) edge raised. With tilt -17.5: A level with D, and the point between
+// the thumb keys level with the palm rest (relaxed thumb tip on the Advantage2: +3.5 mm)
+tent_angle = 10; // [0:0.5:35]
+// Front-to-back tilt of the keyboard; negative = front edge up, which lifts the thumb keys
+// (the palm rest has its own palm_slope)
+tilt_angle = -17.5; // [-20:0.5:10]
 // How deep the case sits in the pocket (mm)
 pocket_depth = 5;
-// Palm rest top, measured from key tops (negative = below keys). Kinesis palm pads sit about level with the home row
-palm_vs_keys = -1;
 // Palm rest depth toward you (mm)
 palm_depth = 68;
-// Palm rest width, from the outer edge inward (mm). Keep it short of the thumb keys
+// Palm rest width (mm). The pad's inner edge runs through the F key centre, like the Advantage2;
+// the plastic reaches palm_round + 2 mm past it, and outward past the board's outer edge
 palm_width = 88;
-// Gap between case front edge and palm rest, room for thumb knuckle (mm)
-palm_gap = 7;
+// Gap between case front edge and palm rest (mm). 0 = the palm rest is the pocket's front wall,
+// which puts D ~55 mm (bird's eye) behind the palm rest's back edge; Advantage2: ~50
+palm_gap = 0;
 // Rounding on the palm rest top edges (mm)
 palm_round = 6;
-// Recess for a stick-on pad (felt/neoprene/cork) on the palm rest, 0 = none
-pad_recess = 0;
+/* [Palm pad] */
+// Recess depth for a stick-on foam pad, 0 = none. 2 mm suits 3 mm foam (pad stands 1 mm proud)
+pad_recess = 2;
+// Foam pad thickness (mm). palm heights are measured to the top of the pad
+pad_thickness = 3;
+// Pad size: a plain rounded rectangle, easy to cut from a foam sheet (mm)
+pad_w = 58;
+pad_d = 56;
+// Corner radius (mm). Round a cut pad's corners around a 2-euro coin (~13 mm)
+pad_corner = 6.5;
+// Gap around the pad inside the recess (mm)
+pad_fit = 0.5;
 
 /* [Stand body] */
 // Rim around the case (mm)
@@ -54,10 +77,62 @@ eps = 0.01;
 
 // ---------- derived ----------
 pcb_w = 109.3;
+pcb_h = 89.6;
 case_off = case_wall + clearance;
-// local frame: z = 0 is the pocket rim plane; tent/tilt rotate it
+// local frame: x right, y away from you, z = 0 at the pocket rim, before tenting
 key_above_rim = key_top_height - pocket_depth;
-palm_raise = key_above_rim + palm_vs_keys;
+// F key centre on the left half, from duckyb/urchin main.kicad_pcb (SW9)
+F_KEY = [63.1, 57.0];
+// home row centres A, S, D (SW6-SW8), from duckyb/urchin main.kicad_pcb
+A_KEY = [9.1, 45.5]; S_KEY = [27.1, 57.5]; D_KEY = [45.1, 63.5];
+// thumb keys (SW16 inner-left, SW17), for the clearance report
+THUMBS = [[73.0, 19.8], [91.6, 12.1]];
+
+// rotation used by tented(): rotate([tilt, -tent, 0]) = Ry(-tent) * Rx(tilt)
+function Rx(a) = [[1, 0, 0], [0, cos(a), -sin(a)], [0, sin(a), cos(a)]];
+function Ry(a) = [[cos(a), 0, sin(a)], [0, 1, 0], [-sin(a), 0, cos(a)]];
+ROT = Ry(-tent_angle) * Rx(tilt_angle);
+pivot_off = [case_off + rim, 0, 0];
+// height of a local point above the deck pivot, before the base lift
+function zr(p) = (ROT * (p + pivot_off))[2];
+
+// 1) lift the stand so the D key top lands d_below_palm under palm_target ...
+base_for_d = palm_target - d_below_palm - zr([D_KEY[0], D_KEY[1], key_above_rim]);
+// ... unless that would leave less than min_floor under the pocket
+floor_pts = [for (x = [-case_off, pcb_w + case_off], y = [-case_off, pcb_h + case_off]) [x, y, -pocket_depth]];
+base_for_floor = min_floor - min([for (p = floor_pts) zr(p)]);
+base = max(base_for_d, base_for_floor);
+// ... and if the floor wins, raise the palm rest with it so D stays d_below_palm under it
+palm_back_inner = palm_target + base - base_for_d;
+function base_h() = base;
+
+// 2) palm rest: a plane in desk coordinates, inner edge under the F key centre
+function world(p) = ROT * (p + pivot_off) + [0, 0, base];
+// the pad's inner edge runs through the F key centre, as on the Advantage2;
+// the plastic goes on past it by the top-edge rounding, so the flat top ends there too
+x_f = world([F_KEY[0], F_KEY[1], key_above_rim])[0];
+x_in = x_f + palm_round + 2;
+x_out = x_in - palm_width;
+y_front = -case_off - palm_depth;
+y_back = 12.5 - case_off - palm_gap;            // back edge at the inner corner (PCB front edge there is y ~12.5)
+pad_dz = pad_thickness - pad_recess;           // pad surface above the plastic
+// height of the pad surface at a desk (x, y)
+function palm_z(x, y) = palm_back_inner + (x - x_f) * tan(palm_side) + (y - y_back) * tan(palm_slope);
+pad_x = x_f - pad_w;
+pad_y = -63;
+
+echo(str("Tent: ", tent_angle, " deg"));
+echo(str("Home row tops A S D F: ", [for (k = [A_KEY, S_KEY, D_KEY, F_KEY]) world([k[0], k[1], key_above_rim])[2]], " mm"));
+echo(str("Palm pad surface plane at the pad's outer/inner edges, front-outer / front-inner / back-inner / back-outer: ",
+         [palm_z(pad_x, y_front), palm_z(x_f, y_front), palm_z(x_f, y_back), palm_z(pad_x, y_back)], " mm"));
+echo(str("Palm pad centre: ", palm_z(pad_x + pad_w / 2, pad_y + pad_d / 2), " mm"));
+echo(str("Between the thumb keys: ", (world([THUMBS[0][0], THUMBS[0][1], key_above_rim])[2] + world([THUMBS[1][0], THUMBS[1][1], key_above_rim])[2]) / 2 - palm_back_inner, " mm vs the palm corner"));
+echo(str("Thumb key tops: ", [for (t = THUMBS) world([t[0], t[1], key_above_rim])[2]], " mm"));
+if (base_for_floor > base_for_d)
+    echo(str("Palm rest raised ", base - base_for_d, " mm above palm_target to keep min_floor under the pocket"));
+echo(str("D key: ", palm_back_inner - world([D_KEY[0], D_KEY[1], key_above_rim])[2], " mm below the palm corner, ",
+         world([D_KEY[0], D_KEY[1], key_above_rim])[1] - world([D_KEY[0], 13.5 - case_off, 0])[1] - palm_gap,
+         " mm behind the palm rest's back edge"));
 
 module pcb() { polygon(URCHIN_PCB_LEFT); }
 // case outline: PCB grown by the wall, notches smoothed shut
@@ -65,33 +140,45 @@ module case2d(extra = 0) {
     offset(r = case_off + extra) offset(delta = -8) offset(delta = 8) pcb();
 }
 module deck2d() { case2d(rim); }
-// whole footprint: deck + palm, bridged so it prints as one piece
-module base2d() { offset(r = -12) offset(r = 12) union() { deck2d(); palm2d(); } }
+// the deck outline as seen from above, in desk coordinates
+M2 = [[ROT[0][0], ROT[0][1], 0, (ROT * pivot_off)[0]], [ROT[1][0], ROT[1][1], 0, (ROT * pivot_off)[1]],
+      [0, 0, 1, 0], [0, 0, 0, 1]];
+module on_desk() { multmatrix(M2) children(); }
+// palm rest footprint, desk coordinates
 module palm2d() {
     difference() {
-        // rounded block in front of the board
-        translate([-case_off - rim, -case_off - palm_depth])
-            offset(r = 10) offset(delta = -10)
-                square([palm_width, palm_depth + 30]);
+        translate([x_out, y_front]) offset(r = 10) offset(delta = -10) square([palm_width, palm_depth + 30]);
         // back edge follows the board's front swoop
-        case2d(palm_gap);
-        // nothing behind the swoop
+        on_desk() case2d(palm_gap);
         translate([-100, 25]) square([400, 400]);
     }
 }
+// low web joining palm rest and deck so it prints as one piece
+module bridge2d() {
+    // only in front, and 1 mm inside the deck outline, so its walls never just touch the deck's
+    intersection() {
+        difference() {
+            offset(r = -12) offset(r = 12) union() { on_desk() offset(delta = -1) deck2d(); palm2d(); }
+            on_desk() case2d(1);
+        }
+        translate([-200, -200]) square([500, 225]);
+    }
+}
+// shear flat z = 0 onto the palm plane (plastic top, pad_dz below the pad surface)
+module palm_plane() {
+    a = tan(palm_side); b = tan(palm_slope);
+    multmatrix([[1, 0, 0, 0], [0, 1, 0, 0], [a, b, 1, palm_z(0, 0) - pad_dz], [0, 0, 0, 1]]) children();
+}
 
-// rounded-top extrusion of a 2D shape, height h, top edge radius r
+// rounded-top extrusion of a 2D shape, height h, top edge radius r.
+// Stacked thin layers rather than hull(), so concave outlines stay concave.
 module rounded_slab(h, r, base = -150) {
-    steps = 10;
+    steps = 16;
     translate([0, 0, base]) linear_extrude(h - base - r + eps) children();
     for (i = [0 : steps - 1]) {
-        a0 = 90 * i / steps; a1 = 90 * (i + 1) / steps;
-        z0 = h - r + r * sin(a0); z1 = h - r + r * sin(a1);
-        inset = r - r * cos(a1);
-        hull() {
-            translate([0, 0, z0]) linear_extrude(eps) offset(delta = -(r - r * cos(a0))) children();
-            translate([0, 0, z1 - eps]) linear_extrude(eps) offset(delta = -inset) children();
-        }
+        a1 = 90 * (i + 1) / steps;
+        z0 = h - r + r * sin(90 * i / steps); z1 = h - r + r * sin(a1);
+        translate([0, 0, z0]) linear_extrude(z1 - z0 + eps) offset(delta = -(r - r * cos(a1))) children();
     }
 }
 
@@ -100,21 +187,16 @@ module tented() {
     // pivot on the outer edge so the outer side stays low
     translate([0, 0, base_h()])
         rotate([tilt_angle, -tent_angle, 0])
-            translate([case_off + rim, 0, 0]) children();
+            translate(pivot_off) children();
 }
-// lift so the lowest point of the pocket floor clears the desk by min_floor
-function base_h() =
-    let(front_y = -case_off - palm_depth,
-        back_y  = 89.6 + case_off + rim,
-        lowest_tilt = min(front_y * sin(tilt_angle), back_y * sin(tilt_angle)))
-    pocket_depth / cos(tent_angle) + min_floor - min(0, lowest_tilt) + 1;
 
 module stand_left() {
     difference() {
         intersection() {
-            tented() union() {
-                translate([0, 0, -150]) linear_extrude(150) base2d();
-                rounded_slab(palm_raise, palm_round) palm2d();
+            union() {
+                tented() translate([0, 0, -150]) linear_extrude(150) deck2d();
+                palm_plane() rounded_slab(0, palm_round) palm2d();
+                linear_extrude(base) bridge2d();
             }
             // keep everything above the desk
             translate([-500, -500, 0]) cube([1000, 1000, 400]);
@@ -128,22 +210,30 @@ module stand_left() {
             // USB-C slot at the nice!nano
             if (usb_slot)
                 translate([93, 55, -pocket_depth + 1.5]) cube([17, 60, 50]);
-            // stick-on pad recess
-            if (pad_recess > 0)
-                translate([0, 0, palm_raise - pad_recess])
-                    linear_extrude(50) offset(delta = -palm_round) palm2d();
         }
+        // stick-on pad recess
+        if (pad_recess > 0) palm_plane()
+            translate([0, 0, -pad_recess]) linear_extrude(50) offset(delta = pad_fit) pad2d();
         // bumpon recesses
         if (foot_recess_h > 0) for (p = feet()) translate([p[0], p[1], -eps])
             cylinder(d = foot_recess_d, h = foot_recess_h + eps);
     }
 }
-// world-space foot spots (front-outer, front-inner, back-outer, back-inner, thumb corner)
-function feet() = let(xin = (pcb_w + 2 * (case_off + rim)) * cos(tent_angle))
-    [[10, -case_off - palm_depth + 10], [(palm_width - 15) * cos(tent_angle), -case_off - palm_depth + 10],
-     [10, 82], [xin - 22, 66], [xin - 18, 2]];
+// desk-space foot spots (palm front-outer, palm front-inner, back-outer, back-inner, thumb corner)
+function feet() = let(xd = world([pcb_w + case_off + rim, 0, 0])[0])
+    [[x_out + 10, y_front + 10], [x_in - 10, y_front + 10],
+     [10, 82], [xd - 22, 66], [xd - 18, 2]];
 
 module left() { stand_left(); }
+
+// the pad: rounded rectangle on the palm rest, desk coordinates
+module pad2d() {
+    translate([pad_x, pad_y]) offset(r = pad_corner) offset(delta = -pad_corner) square([pad_w, pad_d]);
+}
+// 1:1 cutting template (export as SVG, print at 100 %)
+module pad_template() {
+    difference() { offset(delta = 0.3) pad2d(); offset(delta = -0.3) pad2d(); }
+}
 
 module fit_test() {
     linear_extrude(2.4) difference() { deck2d(); case2d(); }
@@ -151,5 +241,6 @@ module fit_test() {
 
 if (part == "left")  left();
 if (part == "right") mirror([1, 0, 0]) left();
+if (part == "pad_template") pad_template();
 if (part == "fit_test_left")  fit_test();
 if (part == "fit_test_right") mirror([1, 0, 0]) fit_test();
