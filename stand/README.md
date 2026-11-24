@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 147 × 169 × 55 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 152 × 169 × 49 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -33,35 +33,41 @@ The pocket follows the real Urchin PCB outline (from
 
 ## How the heights are set
 
-The stand is designed backwards from two measurements on an Advantage2,
-desk to top:
+The stand is designed backwards from measurements on an Advantage2, desk to
+top (left half, with the foam pad):
 
 | | Advantage2 (measured) | Stand |
 |---|---|---|
 | F key | ~40 mm | `f_key_height` = 40 |
-| Palm pad, centre | ~50 mm | `palm_height` = 50 (includes the foam pad) |
+| Palm rest, back-inner corner | ~50 mm | `palm_back_inner` = 50 |
+| Palm rest, back-outer | ~40 mm | 42 mm |
+| Palm rest, front-inner | ~30 mm | 30 mm |
+| Palm rest, front-outer | ~20 mm | 22 mm |
+| Palm rest inner edge | runs through the F key centre | same |
 | Tent | 20° (Kinesis spec) | `tent_angle` = 20 |
 
-The model lifts the stand until the F key top lands on `f_key_height`, then
-raises the palm rest until the pad centre lands on `palm_height`. It prints
-the results in OpenSCAD's console, including the thumb key heights. Change
-the two targets and everything else follows. The F key position comes from
-the Urchin's KiCad file.
+The Advantage2's palm rest isn't flat. Its four corners lie on one plane
+that rises about 20 mm toward the keys over ~75 mm (`palm_slope` = 15°)
+and about 10 mm toward the thumbs over ~95 mm (`palm_side` = 6°). The stand's
+palm rest uses the same plane, anchored at the back-inner corner. It's 80 mm wide
+against the Kinesis's ~95 mm, so the front-outer corner ends up 2 mm higher.
+
+The model lifts the board until the F key top lands on `f_key_height`, then
+places the palm plane. It prints the F key, all four palm corners, the pad
+centre and the thumb key heights in OpenSCAD's console. The F key position
+comes from the Urchin's KiCad file.
 
 ## Settings worth trying
 
-- `f_key_height`, `palm_height`: the drop between them (10 mm) puts the keys
-  below your wrist, like the Advantage2's key wells. Raise `palm_height` for
-  more drop, lower it for less.
+- `f_key_height`, `palm_back_inner`: the 10 mm drop between them puts the keys
+  below your wrist, like the Advantage2's key wells.
+- `palm_slope`, `palm_side`: the palm rest's own tilts, independent of the board.
 - `tent_angle` (default 20°): matches the Advantage2. Lower it if 20° feels too steep.
-- `tilt_angle` (default 0°): front-to-back tilt. At 0° the palm rest is the
-  same height wherever your palm lands front to back.
-- `palm_tent` (default 10°): sideways tilt of the palm rest alone. Across the
-  pad centre its top runs from about 43 mm (outer edge) to 55 mm (inner edge).
-  It pivots on the pad centre, so `palm_height` is unaffected.
-- `palm_width` (default 76 mm): kept short of the thumb keys, so the raised palm
-  rest doesn't sit right in front of them.
-- `palm_gap`, `palm_width`: move the rest if it gets in the thumb's way.
+- `tilt_angle` (default 0°): front-to-back tilt of the board only.
+- `palm_width` (default 80 mm): the inner edge stays on the F key, so this
+  sets how far the rest reaches past the board's outer edge. It stops short
+  of the thumb keys.
+- `palm_gap`: room for the thumb knuckle between palm rest and board.
 - `pad_recess`, `pad_w`, `pad_d`: the palm pad recess (see below). `pad_recess = 0` removes it.
 
 ## Palm pads
