@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 149 × 171 × 62 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 147 × 169 × 55 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -28,26 +28,39 @@ The pocket follows the real Urchin PCB outline (from
    - Re-export.
    The STLs assume a 3.0 mm case wall and 0.6 mm clearance. That's an estimate for the Coral case, not a measurement.
 2. Measure `key_top_height`: desk to the top of a home-row keycap with the
-   case flat on the desk (default 15 mm). It sets the palm rest height.
+   case flat on the desk. The default 15 mm is an estimate. Every key height
+   on the stand shifts 1:1 with it, so this one matters most.
+
+## How the heights are set
+
+The stand is designed backwards from two measurements on an Advantage2,
+desk to top:
+
+| | Advantage2 (measured) | Stand |
+|---|---|---|
+| F key | ~40 mm | `f_key_height` = 40 |
+| Palm pad, centre | ~50 mm | `palm_height` = 50 (includes the foam pad) |
+| Tent | 20° (Kinesis spec) | `tent_angle` = 20 |
+
+The model lifts the stand until the F key top lands on `f_key_height`, then
+raises the palm rest until the pad centre lands on `palm_height`. It prints
+the results in OpenSCAD's console, including the thumb key heights. Change
+the two targets and everything else follows. The F key position comes from
+the Urchin's KiCad file.
 
 ## Settings worth trying
 
-- `tent_angle` (default 20°): matches the Advantage2's published 20° tent.
-  Lower it if 20° feels too steep.
-- `tilt_angle` (default −3°): back slightly lower than front. With the palm
-  rest raised, this keeps the keys below your wrist, like the Advantage's
-  key wells.
-- `palm_vs_keys` (default +17.5 mm): palm rest top relative to the key tops,
-  measured along the tented deck. The default puts the pad centre about 10 mm
-  above the F key, measured from the desk, the same as on an Advantage2
-  (palm pad ~50 mm, F key ~40 mm). Each 1 mm here changes that drop by
-  about 1 mm. Thicker foam raises it too, with no reprint.
-- `palm_tent` (default 10°): sideways tilt of the palm rest alone. At the full
-  20° the palm rest's outer edge dropped to about 44 mm. At 10° its top runs
-  from about 52 mm (outer edge) to 61 mm (inner edge). It pivots on the pad
-  centre, so the drop to the F key doesn't change.
-- `palm_width` (default 76 mm): kept short of the thumb keys, because the raised
-  palm rest would otherwise sit right in front of them.
+- `f_key_height`, `palm_height`: the drop between them (10 mm) puts the keys
+  below your wrist, like the Advantage2's key wells. Raise `palm_height` for
+  more drop, lower it for less.
+- `tent_angle` (default 20°): matches the Advantage2. Lower it if 20° feels too steep.
+- `tilt_angle` (default 0°): front-to-back tilt. At 0° the palm rest is the
+  same height wherever your palm lands front to back.
+- `palm_tent` (default 10°): sideways tilt of the palm rest alone. Across the
+  pad centre its top runs from about 43 mm (outer edge) to 55 mm (inner edge).
+  It pivots on the pad centre, so `palm_height` is unaffected.
+- `palm_width` (default 76 mm): kept short of the thumb keys, so the raised palm
+  rest doesn't sit right in front of them.
 - `palm_gap`, `palm_width`: move the rest if it gets in the thumb's way.
 - `pad_recess`, `pad_w`, `pad_d`: the palm pad recess (see below). `pad_recess = 0` removes it.
 
@@ -71,7 +84,7 @@ wears out.
 
 - PLA or PETG, 0.2 mm layers, 3 walls, 10–15 % gyroid infill.
 - Print flat on its base, no supports. The USB and finger notches are open at the top.
-- About 200–230 g and roughly 8–10 h per half.
+- About 170–200 g and roughly 7–9 h per half.
 - Optional: 10 mm silicone bumpons in the five recesses underneath.
 
 ## Re-exporting

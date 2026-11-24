@@ -15,18 +15,22 @@ part = "left"; // [left, right, fit_test_left, fit_test_right, pad_template]
 case_wall = 3.0;
 // Extra gap around the case so it drops in (mm)
 clearance = 0.6;
-// Desk to top of the home-row keycaps with the case flat on the desk (mm)
+// Desk to top of the home-row keycaps with the case flat on the desk (mm). NOT YET MEASURED: this shifts every key height 1:1
 key_top_height = 15;
 
+/* [Targets: measured on your Kinesis Advantage2] */
+// Desk to top of the F key (mm)
+f_key_height = 40;
+// Desk to top of the palm pad, at its centre (mm)
+palm_height = 50;
+
 /* [Ergonomics] */
-// Tenting: inner (thumb) edge raised. Kinesis Advantage ~ 10-20 deg
+// Tenting: inner (thumb) edge raised. Advantage2 spec: 20 deg
 tent_angle = 20; // [0:1:35]
-// Front-to-back tilt. Negative = back lower (like sitting in a key well)
-tilt_angle = -3; // [-10:1:10]
+// Front-to-back tilt. 0 keeps the palm rest the same height wherever your palm lands
+tilt_angle = 0; // [-10:1:10]
 // How deep the case sits in the pocket (mm)
 pocket_depth = 5;
-// Palm rest top, measured from key tops (positive = palm above keys, so keys sit below the wrist like on a Kinesis)
-palm_vs_keys = 17.5;
 // Sideways tilt of the palm rest only. Lower than tent_angle keeps its outer edge from dropping low; it pivots on the pad centre, so the palm-to-keys drop stays the same
 palm_tent = 10; // [0:1:35]
 // Palm rest depth toward you (mm)
@@ -40,6 +44,8 @@ palm_round = 6;
 /* [Palm pad] */
 // Recess depth for a stick-on foam pad, 0 = none. 2 mm suits 3 mm foam (pad stands 1 mm proud)
 pad_recess = 2;
+// Foam pad thickness (mm). palm_height is measured to the top of the pad
+pad_thickness = 3;
 // Pad size: a plain rounded rectangle, easy to cut from a foam sheet (mm)
 pad_w = 58;
 pad_d = 56;
@@ -64,10 +70,46 @@ eps = 0.01;
 
 // ---------- derived ----------
 pcb_w = 109.3;
+pcb_h = 89.6;
 case_off = case_wall + clearance;
-// local frame: z = 0 is the pocket rim plane; tent/tilt rotate it
+// local frame: x right, y away from you, z = 0 at the pocket rim, before tenting
 key_above_rim = key_top_height - pocket_depth;
-palm_raise = key_above_rim + palm_vs_keys;
+// F key centre on the left half, from duckyb/urchin main.kicad_pcb (SW9)
+F_KEY = [63.1, 57.0];
+// thumb keys (SW16 inner-left, SW17), for the clearance report
+THUMBS = [[73.0, 19.8], [91.6, 12.1]];
+
+// rotation used by tented(): rotate([tilt, -tent, 0]) = Ry(-tent) * Rx(tilt)
+function Rx(a) = [[1, 0, 0], [0, cos(a), -sin(a)], [0, sin(a), cos(a)]];
+function Ry(a) = [[cos(a), 0, sin(a)], [0, 1, 0], [-sin(a), 0, cos(a)]];
+ROT = Ry(-tent_angle) * Rx(tilt_angle);
+pivot_off = [case_off + rim, 0, 0];
+// height of a local point above the deck pivot, before the base lift
+function zr(p) = (ROT * (p + pivot_off))[2];
+
+// 1) lift the stand so the F key top lands on f_key_height ...
+base_for_f = f_key_height - zr([F_KEY[0], F_KEY[1], key_above_rim]);
+// ... unless that would leave less than min_floor under the pocket
+floor_pts = [for (x = [-case_off, pcb_w + case_off], y = [-case_off, pcb_h + case_off]) [x, y, -pocket_depth]];
+base_for_floor = min_floor - min([for (p = floor_pts) zr(p)]);
+base = max(base_for_f, base_for_floor);
+function base_h() = base;
+
+// 2) raise the palm rest so the pad surface at its centre lands on palm_height
+pad_c = [1 + pad_w / 2, -63 + pad_d / 2];
+pad_dz = pad_thickness - pad_recess;           // pad surface above the palm rest top
+d_tent = tent_angle - palm_tent;
+row = ROT[2];
+palm_raise = (palm_height - base
+              - row[0] * (pad_c[0] + pad_dz * sin(d_tent) + pivot_off[0])
+              - row[1] * pad_c[1]
+              - row[2] * pad_dz * cos(d_tent)) / row[2];
+
+echo(str("F key top: ", base + zr([F_KEY[0], F_KEY[1], key_above_rim]), " mm (target ", f_key_height, ")"));
+echo(str("Palm pad centre: ", palm_height, " mm; palm rest ", palm_raise - key_above_rim, " mm above the key plane"));
+echo(str("Thumb key tops: ", [for (t = THUMBS) base + zr([t[0], t[1], key_above_rim])], " mm"));
+if (base_for_floor > base_for_f)
+    echo("WARNING: F key sits higher than f_key_height, to keep min_floor under the pocket");
 
 module pcb() { polygon(URCHIN_PCB_LEFT); }
 // case outline: PCB grown by the wall, notches smoothed shut
@@ -110,14 +152,8 @@ module tented() {
     // pivot on the outer edge so the outer side stays low
     translate([0, 0, base_h()])
         rotate([tilt_angle, -tent_angle, 0])
-            translate([case_off + rim, 0, 0]) children();
+            translate(pivot_off) children();
 }
-// lift so the lowest point of the pocket floor clears the desk by min_floor
-function base_h() =
-    let(front_y = -case_off - palm_depth,
-        back_y  = 89.6 + case_off + rim,
-        lowest_tilt = min(front_y * sin(tilt_angle), back_y * sin(tilt_angle)))
-    pocket_depth / cos(tent_angle) + min_floor - min(0, lowest_tilt) + 1;
 
 module stand_left() {
     difference() {
