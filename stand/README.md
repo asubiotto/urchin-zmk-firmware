@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 152 × 169 × 49 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 142 × 169 × 47 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -38,19 +38,25 @@ top (left half, with the foam pad):
 
 | | Advantage2 (measured) | Stand |
 |---|---|---|
-| F key | ~40 mm | `f_key_height` = 40 |
+| F key | ~40 mm (highest key) | `f_key_height` = 40 |
+| A key | ~30 mm (S, D also ~30) | `a_key_height` = 30; S 33, D 37 |
 | Palm rest, back-inner corner | ~50 mm | `palm_back_inner` = 50 |
 | Palm rest, back-outer | ~40 mm | 42 mm |
 | Palm rest, front-inner | ~30 mm | 30 mm |
 | Palm rest, front-outer | ~20 mm | 22 mm |
 | Palm rest inner edge | runs through the F key centre | same |
-| Tent | 20° (Kinesis spec) | `tent_angle` = 20 |
+| Tent | F→A drops 10 mm | 10.7°, worked out from the two |
 
 The Advantage2's palm rest isn't flat. Its four corners lie on one plane
 that rises about 20 mm toward the keys over ~75 mm (`palm_slope` = 15°)
 and about 10 mm toward the thumbs over ~95 mm (`palm_side` = 6°). The stand's
 palm rest uses the same plane, anchored at the back-inner corner. It's 80 mm wide
 against the Kinesis's ~95 mm, so the front-outer corner ends up 2 mm higher.
+
+The tent comes from the key heights, not Kinesis's 20° figure. 20° put the
+pinky 20 mm off the desk, far lower than on the Advantage2. Its curved wells
+sink S and D too, which a flat board can't copy, so the stand matches F and A
+and puts S and D in between.
 
 The model lifts the board until the F key top lands on `f_key_height`, then
 places the palm plane. It prints the F key, all four palm corners, the pad
@@ -62,7 +68,7 @@ comes from the Urchin's KiCad file.
 - `f_key_height`, `palm_back_inner`: the 10 mm drop between them puts the keys
   below your wrist, like the Advantage2's key wells.
 - `palm_slope`, `palm_side`: the palm rest's own tilts, independent of the board.
-- `tent_angle` (default 20°): matches the Advantage2. Lower it if 20° feels too steep.
+- `a_key_height` (default 30): sets the tent. Or set `tent_set` to a fixed angle (−1 = automatic).
 - `tilt_angle` (default 0°): front-to-back tilt of the board only.
 - `palm_width` (default 80 mm): the inner edge stays on the F key, so this
   sets how far the rest reaches past the board's outer edge. It stops short
