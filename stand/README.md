@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 147 × 171 × 68 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 149 × 171 × 62 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -42,6 +42,10 @@ The pocket follows the real Urchin PCB outline (from
   above the F key, measured from the desk, the same as on an Advantage2
   (palm pad ~50 mm, F key ~40 mm). Each 1 mm here changes that drop by
   about 1 mm. Thicker foam raises it too, with no reprint.
+- `palm_tent` (default 10°): sideways tilt of the palm rest alone. At the full
+  20° the palm rest's outer edge dropped to about 44 mm. At 10° its top runs
+  from about 52 mm (outer edge) to 61 mm (inner edge). It pivots on the pad
+  centre, so the drop to the F key doesn't change.
 - `palm_width` (default 76 mm): kept short of the thumb keys, because the raised
   palm rest would otherwise sit right in front of them.
 - `palm_gap`, `palm_width`: move the rest if it gets in the thumb's way.

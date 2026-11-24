@@ -27,6 +27,8 @@ tilt_angle = -3; // [-10:1:10]
 pocket_depth = 5;
 // Palm rest top, measured from key tops (positive = palm above keys, so keys sit below the wrist like on a Kinesis)
 palm_vs_keys = 17.5;
+// Sideways tilt of the palm rest only. Lower than tent_angle keeps its outer edge from dropping low; it pivots on the pad centre, so the palm-to-keys drop stays the same
+palm_tent = 10; // [0:1:35]
 // Palm rest depth toward you (mm)
 palm_depth = 68;
 // Palm rest width, from the outer edge inward (mm). Keep it short of the thumb keys
@@ -122,7 +124,7 @@ module stand_left() {
         intersection() {
             tented() union() {
                 translate([0, 0, -150]) linear_extrude(150) base2d();
-                rounded_slab(palm_raise, palm_round) palm2d();
+                palm_frame() rounded_slab(palm_raise, palm_round) palm2d();
             }
             // keep everything above the desk
             translate([-500, -500, 0]) cube([1000, 1000, 400]);
@@ -137,7 +139,7 @@ module stand_left() {
             if (usb_slot)
                 translate([93, 55, -pocket_depth + 1.5]) cube([17, 60, 50]);
             // stick-on pad recess
-            if (pad_recess > 0)
+            if (pad_recess > 0) palm_frame()
                 translate([0, 0, palm_raise - pad_recess])
                     linear_extrude(50) offset(delta = pad_fit) pad2d();
         }
@@ -152,6 +154,13 @@ function feet() = let(xin = (pcb_w + 2 * (case_off + rim)) * cos(tent_angle))
      [10, 82], [xin - 22, 66], [xin - 18, 2]];
 
 module left() { stand_left(); }
+
+// re-tilts the palm rest from tent_angle to palm_tent, pivoting on the pad centre
+module palm_frame() {
+    px = 1 + pad_w / 2;
+    translate([px, 0, palm_raise]) rotate([0, tent_angle - palm_tent, 0])
+        translate([-px, 0, -palm_raise]) children();
+}
 
 // the pad: rounded rectangle on the flat top of the palm rest
 module pad2d() {
