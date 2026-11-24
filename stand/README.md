@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 142 × 171 × 58 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 147 × 171 × 68 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -37,15 +37,19 @@ The pocket follows the real Urchin PCB outline (from
 - `tilt_angle` (default −3°): back slightly lower than front. With the palm
   rest raised, this keeps the keys below your wrist, like the Advantage's
   key wells.
-- `palm_vs_keys` (default +3 mm): palm rest top relative to the key tops.
-  Positive puts the keys below your palms. With a 3 mm foam pad and the tilt,
-  the home row ends up about 8 mm below the pad surface.
+- `palm_vs_keys` (default +17.5 mm): palm rest top relative to the key tops,
+  measured along the tented deck. The default puts the pad centre about 10 mm
+  above the F key, measured from the desk, the same as on an Advantage2
+  (palm pad ~50 mm, F key ~40 mm). Each 1 mm here changes that drop by
+  about 1 mm. Thicker foam raises it too, with no reprint.
+- `palm_width` (default 76 mm): kept short of the thumb keys, because the raised
+  palm rest would otherwise sit right in front of them.
 - `palm_gap`, `palm_width`: move the rest if it gets in the thumb's way.
 - `pad_recess`, `pad_w`, `pad_d`: the palm pad recess (see below). `pad_recess = 0` removes it.
 
 ## Palm pads
 
-Each palm rest has a 2 mm deep recess for a **70 × 54 mm** rounded-rectangle
+Each palm rest has a 2 mm deep recess for a **58 × 56 mm** rounded-rectangle
 pad. It's a plain rectangle so it's easy to cut, and easy to replace when it
 wears out.
 
@@ -54,7 +58,7 @@ wears out.
   stands 1 mm proud of the plastic, so no hard edge touches your palm.
   Thicker or softer foam: set `pad_recess` to foam thickness − 1 mm.
 - **Cutting:** print `out/palm_pad_template.svg` at 100 % (no "fit to page"),
-  or just measure 70 × 54 mm with a ruler. Round the corners around a
+  or just measure 58 × 56 mm with a ruler. Round the corners around a
   2-euro coin.
 - **Kinesis's own pads** (AC005PP-BLK, 95 × 75 mm) are too big for this palm
   rest, and hard to find in Europe.
@@ -63,7 +67,7 @@ wears out.
 
 - PLA or PETG, 0.2 mm layers, 3 walls, 10–15 % gyroid infill.
 - Print flat on its base, no supports. The USB and finger notches are open at the top.
-- About 190–220 g and roughly 8–10 h per half.
+- About 200–230 g and roughly 8–10 h per half.
 - Optional: 10 mm silicone bumpons in the five recesses underneath.
 
 ## Re-exporting

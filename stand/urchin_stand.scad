@@ -26,11 +26,11 @@ tilt_angle = -3; // [-10:1:10]
 // How deep the case sits in the pocket (mm)
 pocket_depth = 5;
 // Palm rest top, measured from key tops (positive = palm above keys, so keys sit below the wrist like on a Kinesis)
-palm_vs_keys = 3;
+palm_vs_keys = 17.5;
 // Palm rest depth toward you (mm)
 palm_depth = 68;
 // Palm rest width, from the outer edge inward (mm). Keep it short of the thumb keys
-palm_width = 88;
+palm_width = 76;
 // Gap between case front edge and palm rest, room for thumb knuckle (mm)
 palm_gap = 7;
 // Rounding on the palm rest top edges (mm)
@@ -39,8 +39,8 @@ palm_round = 6;
 // Recess depth for a stick-on foam pad, 0 = none. 2 mm suits 3 mm foam (pad stands 1 mm proud)
 pad_recess = 2;
 // Pad size: a plain rounded rectangle, easy to cut from a foam sheet (mm)
-pad_w = 70;
-pad_d = 54;
+pad_w = 58;
+pad_d = 56;
 // Corner radius (mm). Round a cut pad's corners around a 2-euro coin (~13 mm)
 pad_corner = 6.5;
 // Gap around the pad inside the recess (mm)
