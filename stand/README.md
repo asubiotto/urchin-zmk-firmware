@@ -38,7 +38,23 @@ The pocket follows the real Urchin PCB outline (from
   straight, like typing into the Advantage's key well.
 - `palm_vs_keys` (default −1 mm): palm rest top relative to the key tops.
 - `palm_gap`, `palm_width`: move the rest if it gets in the thumb's way.
-- `pad_recess`: cuts a recess for a stick-on felt or neoprene pad on the palm rest.
+- `pad_recess`, `pad_w`, `pad_d`: the palm pad recess (see below). `pad_recess = 0` removes it.
+
+## Palm pads
+
+Each palm rest has a 2 mm deep recess for a **70 × 54 mm** rounded-rectangle
+pad. It's a plain rectangle so it's easy to cut, and easy to replace when it
+wears out.
+
+- **Material:** self-adhesive closed-cell foam sheet, 3 mm thick (neoprene or
+  EPDM). A 300 × 200 mm sheet makes about 12 pads. With 3 mm foam the pad
+  stands 1 mm proud of the plastic, so no hard edge touches your palm.
+  Thicker or softer foam: set `pad_recess` to foam thickness − 1 mm.
+- **Cutting:** print `out/palm_pad_template.svg` at 100 % (no "fit to page"),
+  or just measure 70 × 54 mm with a ruler. Round the corners around a
+  2-euro coin.
+- **Kinesis's own pads** (AC005PP-BLK, 95 × 75 mm) are too big for this palm
+  rest, and hard to find in Europe.
 
 ## Printing (A1 mini)
 
@@ -46,8 +62,6 @@ The pocket follows the real Urchin PCB outline (from
 - Print flat on its base, no supports. The USB and finger notches are open at the top.
 - About 150–180 g and roughly 6–8 h per half.
 - Optional: 10 mm silicone bumpons in the five recesses underneath.
-- The printed palm surface is hard. A felt or neoprene pad (or `pad_recess`)
-  makes it closer to the Kinesis pads.
 
 ## Re-exporting
 

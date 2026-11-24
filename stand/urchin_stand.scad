@@ -8,7 +8,7 @@
 include <urchin_outline.scad>
 
 /* [What to print] */
-part = "left"; // [left, right, fit_test_left, fit_test_right]
+part = "left"; // [left, right, fit_test_left, fit_test_right, pad_template]
 
 /* [Your Urchin case — measure these] */
 // How far the case sticks out past the PCB edge, per side (mm)
@@ -35,8 +35,16 @@ palm_width = 88;
 palm_gap = 7;
 // Rounding on the palm rest top edges (mm)
 palm_round = 6;
-// Recess for a stick-on pad (felt/neoprene/cork) on the palm rest, 0 = none
-pad_recess = 0;
+/* [Palm pad] */
+// Recess depth for a stick-on foam pad, 0 = none. 2 mm suits 3 mm foam (pad stands 1 mm proud)
+pad_recess = 2;
+// Pad size: a plain rounded rectangle, easy to cut from a foam sheet (mm)
+pad_w = 70;
+pad_d = 54;
+// Corner radius (mm). Round a cut pad's corners around a 2-euro coin (~13 mm)
+pad_corner = 6.5;
+// Gap around the pad inside the recess (mm)
+pad_fit = 0.5;
 
 /* [Stand body] */
 // Rim around the case (mm)
@@ -131,7 +139,7 @@ module stand_left() {
             // stick-on pad recess
             if (pad_recess > 0)
                 translate([0, 0, palm_raise - pad_recess])
-                    linear_extrude(50) offset(delta = -palm_round) palm2d();
+                    linear_extrude(50) offset(delta = pad_fit) pad2d();
         }
         // bumpon recesses
         if (foot_recess_h > 0) for (p = feet()) translate([p[0], p[1], -eps])
@@ -145,11 +153,21 @@ function feet() = let(xin = (pcb_w + 2 * (case_off + rim)) * cos(tent_angle))
 
 module left() { stand_left(); }
 
+// the pad: rounded rectangle on the flat top of the palm rest
+module pad2d() {
+    translate([1, -63]) offset(r = pad_corner) offset(delta = -pad_corner) square([pad_w, pad_d]);
+}
+// 1:1 cutting template (export as SVG, print at 100 %)
+module pad_template() {
+    difference() { offset(delta = 0.3) pad2d(); offset(delta = -0.3) pad2d(); }
+}
+
 module fit_test() {
     linear_extrude(2.4) difference() { deck2d(); case2d(); }
 }
 
 if (part == "left")  left();
 if (part == "right") mirror([1, 0, 0]) left();
+if (part == "pad_template") pad_template();
 if (part == "fit_test_left")  fit_test();
 if (part == "fit_test_right") mirror([1, 0, 0]) fit_test();
