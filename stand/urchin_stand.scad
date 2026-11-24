@@ -20,13 +20,13 @@ key_top_height = 15;
 
 /* [Ergonomics] */
 // Tenting: inner (thumb) edge raised. Kinesis Advantage ~ 10-20 deg
-tent_angle = 15; // [0:1:35]
+tent_angle = 20; // [0:1:35]
 // Front-to-back tilt. Negative = back lower (like sitting in a key well)
 tilt_angle = -3; // [-10:1:10]
 // How deep the case sits in the pocket (mm)
 pocket_depth = 5;
-// Palm rest top, measured from key tops (negative = below keys). Kinesis palm pads sit about level with the home row
-palm_vs_keys = -1;
+// Palm rest top, measured from key tops (positive = palm above keys, so keys sit below the wrist like on a Kinesis)
+palm_vs_keys = 3;
 // Palm rest depth toward you (mm)
 palm_depth = 68;
 // Palm rest width, from the outer edge inward (mm). Keep it short of the thumb keys

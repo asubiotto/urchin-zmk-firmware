@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 135 × 171 × 48 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 142 × 171 × 58 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -32,11 +32,14 @@ The pocket follows the real Urchin PCB outline (from
 
 ## Settings worth trying
 
-- `tent_angle` (default 15°): the Advantage is roughly in the 10–20° range.
-  Start lower if 15° feels odd.
-- `tilt_angle` (default −3°): back slightly lower than front, which keeps your wrists
-  straight, like typing into the Advantage's key well.
-- `palm_vs_keys` (default −1 mm): palm rest top relative to the key tops.
+- `tent_angle` (default 20°): matches the Advantage2's published 20° tent.
+  Lower it if 20° feels too steep.
+- `tilt_angle` (default −3°): back slightly lower than front. With the palm
+  rest raised, this keeps the keys below your wrist, like the Advantage's
+  key wells.
+- `palm_vs_keys` (default +3 mm): palm rest top relative to the key tops.
+  Positive puts the keys below your palms. With a 3 mm foam pad and the tilt,
+  the home row ends up about 8 mm below the pad surface.
 - `palm_gap`, `palm_width`: move the rest if it gets in the thumb's way.
 - `pad_recess`, `pad_w`, `pad_d`: the palm pad recess (see below). `pad_recess = 0` removes it.
 
@@ -60,7 +63,7 @@ wears out.
 
 - PLA or PETG, 0.2 mm layers, 3 walls, 10–15 % gyroid infill.
 - Print flat on its base, no supports. The USB and finger notches are open at the top.
-- About 150–180 g and roughly 6–8 h per half.
+- About 190–220 g and roughly 8–10 h per half.
 - Optional: 10 mm silicone bumpons in the five recesses underneath.
 
 ## Re-exporting
