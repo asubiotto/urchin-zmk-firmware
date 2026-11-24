@@ -30,12 +30,12 @@ palm_slope = 15; // [0:1:25]
 palm_side = 6; // [0:1:25]
 
 /* [Ergonomics] */
-// Tenting, inner (thumb) edge raised. 12 + tilt -13.5 is the best fit to the
-// Advantage2 heights (A/S/D 30, F 40, thumbs 52/55)
-tent_angle = 12; // [0:0.5:35]
+// Tenting, inner (thumb) edge raised. With tilt -17.5: A level with D, and the point between
+// the thumb keys level with the palm rest (relaxed thumb tip on the Advantage2: +3.5 mm)
+tent_angle = 10; // [0:0.5:35]
 // Front-to-back tilt of the keyboard; negative = front edge up, which lifts the thumb keys
 // (the palm rest has its own palm_slope)
-tilt_angle = -13.5; // [-20:0.5:10]
+tilt_angle = -17.5; // [-20:0.5:10]
 // How deep the case sits in the pocket (mm)
 pocket_depth = 5;
 // Palm rest depth toward you (mm)
@@ -123,6 +123,7 @@ echo(str("Home row tops A S D F: ", [for (k = [A_KEY, S_KEY, D_KEY, F_KEY]) worl
 echo(str("Palm pad top, front-outer / front-inner / back-inner / back-outer: ",
          [palm_z(x_out, y_front), palm_z(x_in, y_front), palm_z(x_in, y_back), palm_z(x_out, y_back)], " mm"));
 echo(str("Palm pad centre: ", palm_z(pad_x + pad_w / 2, pad_y + pad_d / 2), " mm"));
+echo(str("Between the thumb keys: ", (world([THUMBS[0][0], THUMBS[0][1], key_above_rim])[2] + world([THUMBS[1][0], THUMBS[1][1], key_above_rim])[2]) / 2 - palm_back_inner, " mm vs the palm corner"));
 echo(str("Thumb key tops: ", [for (t = THUMBS) world([t[0], t[1], key_above_rim])[2]], " mm"));
 if (base_for_floor > base_for_d)
     echo(str("Palm rest raised ", base - base_for_d, " mm above palm_target to keep min_floor under the pocket"));

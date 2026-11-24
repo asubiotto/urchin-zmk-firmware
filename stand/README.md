@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 143 × 166 × 52 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 142 × 164 × 55 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -33,42 +33,44 @@ The pocket follows the real Urchin PCB outline (from
 
 ## How the heights are set
 
-The stand is designed backwards from measurements on an Advantage2, desk to
-top, left half:
+Keys are placed relative to the palm rest, not the desk. Desk height is just
+chair height; what the hand feels is the distance from the palm rest to each
+key. The targets come from an Advantage2 (left half, keycaps 15 mm tall on the
+Urchin):
 
-| | Advantage2 (measured) | Stand |
+| Relative to the palm rest's back-inner corner | Advantage2 | Stand |
 |---|---|---|
-| A / S / D | ~30 mm | 31 / 32 / 34 mm |
-| F | ~40 mm | 39 mm |
-| Thumb, outer (Kinesis Backspace) | ~52 mm | 50 mm |
-| Thumb, inner (Kinesis Delete) | ~55 mm | 56 mm |
-| Palm rest corners: front-outer, front-inner, back-inner, back-outer | 20, 30, 50, 40 mm | 24, 33, 54, 46 mm |
-| D key below the palm rest's back-inner corner | 20 mm | 20 mm (`d_below_palm`) |
-| D key behind the palm rest's back edge, bird's eye | ~50 mm | 54 mm (as close as the Urchin allows) |
-| Palm rest inner edge | runs through the F key centre | same |
+| D key, below | 20 mm | 20 mm (`d_below_palm`) |
+| D key, behind the back edge (bird's eye) | ~50 mm | 54 mm, as close as the Urchin allows |
+| A key vs D | level | 1 mm above |
+| F key vs D | 10 mm above | 5 mm above |
+| Relaxed thumb tip / point between the thumb keys | 3.5 mm above | 0.5 mm above |
+| Palm rest inner edge | through the F key centre | same |
 
-**Board angles: 12° tent, front edge up 13.5° (`tilt_angle` = −13.5).** These
-are the best fit to the six key heights above. The front-up tilt is what
-lifts the thumb keys: the Advantage2 sits them on raised clusters 20–25 mm
-above the home row, and a flat board can only get there by raising its front.
-The side effect is the top row sits about 4 mm lower than the home row and the
-bottom row about 4 mm higher.
+**Board: 10° tent, front edge up 17.5° (`tilt_angle` = −17.5).** A flat board
+can't copy the Kinesis's curved wells, so these angles are a compromise:
 
-**Why not Kinesis's 20°?** That figure describes how far the key wells are
-tipped, not the key tops. Across your home row the tops only drop about 10 mm
-from F to A. At 20° the pinky ended up 20 mm off the desk.
+- Raising the front edge lifts the thumb keys up to the palm rest. On the
+  Advantage2 the relaxed thumb tip rests between Backspace and Delete, level
+  with their tops, 3.5 mm above the palm rest.
+- The cost is the top row, which ends up 5 mm below the home row (bottom row
+  5 mm above). Going all the way to +3.5 mm for the thumb would take 21.5°
+  and drop the top row 6 mm.
+- F only gets 5 mm above D, not 10: F and D are neighbouring columns on a flat
+  board, and the Kinesis's difference comes from its well's curve.
 
-**Palm rest angles: 6° toward the thumbs (`palm_side`), 15° toward the keys
-(`palm_slope`)**, set separately from the board, anchored at 50 mm on the
-back-inner corner.
+**Why not Kinesis's 20° tent?** That figure describes how far the key wells
+are tipped, not the key tops. Across the home row the tops only drop about
+10 mm from F to A.
 
-Keys are placed relative to the palm rest, not the desk: D sits `d_below_palm`
-under the palm rest's back-inner corner, and the palm rest is the pocket's
-front wall (`palm_gap` = 0) to bring D as close as possible. The board then
-drops as low as `min_floor` allows, and the palm rest follows it, so it sits
-4 mm above the Kinesis's 50 mm. Desk height doesn't matter to the hand, only
-these relative distances do. The OpenSCAD console prints every
-key and palm-corner height.
+**Palm rest: 6° toward the thumbs (`palm_side`), 15° toward the keys
+(`palm_slope`)**, copied from the four corner heights of the Advantage2's palm
+rest (20, 30, 50, 40 mm). It's also the pocket's front wall (`palm_gap` = 0),
+to bring D as close as possible.
+
+The board sits as low as `min_floor` allows, which puts the palm rest's
+back-inner corner at 54 mm, 4 mm above the Kinesis. The OpenSCAD console
+prints every key and palm-corner height.
 
 ## Settings worth trying
 
