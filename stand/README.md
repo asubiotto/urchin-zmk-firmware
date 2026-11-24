@@ -78,9 +78,8 @@ prints every key and palm-corner height.
   and lowers A; more negative tilt raises the thumbs and bottom row.
 - `palm_target`, `d_below_palm`: palm rest height, and how far D sits below it.
 - `palm_slope`, `palm_side`: the palm rest's own tilts, independent of the board.
-- `palm_width` (default 80 mm): the inner edge stays on the F key, so this
-  sets how far the rest reaches past the board's outer edge. It stops short
-  of the thumb keys.
+- `palm_width` (default 88 mm): the pad's inner edge stays on the F key, so
+  this sets how far the rest reaches past the board's outer edge.
 - `palm_gap` (default 0): space between palm rest and case.
 - `pad_recess`, `pad_w`, `pad_d`: the palm pad recess (see below). `pad_recess = 0` removes it.
 
