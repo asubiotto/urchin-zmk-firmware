@@ -42,7 +42,9 @@ top, left half:
 | F | ~40 mm | 39 mm |
 | Thumb, outer (Kinesis Backspace) | ~52 mm | 50 mm |
 | Thumb, inner (Kinesis Delete) | ~55 mm | 56 mm |
-| Palm rest corners: front-outer, front-inner, back-inner, back-outer | 20, 30, 50, 40 mm | 22, 30, 50, 42 mm |
+| Palm rest corners: front-outer, front-inner, back-inner, back-outer | 20, 30, 50, 40 mm | 24, 33, 54, 46 mm |
+| D key below the palm rest's back-inner corner | 20 mm | 20 mm (`d_below_palm`) |
+| D key behind the palm rest's back edge, bird's eye | ~50 mm | 54 mm (as close as the Urchin allows) |
 | Palm rest inner edge | runs through the F key centre | same |
 
 **Board angles: 12° tent, front edge up 13.5° (`tilt_angle` = −13.5).** These
@@ -60,19 +62,24 @@ from F to A. At 20° the pinky ended up 20 mm off the desk.
 (`palm_slope`)**, set separately from the board, anchored at 50 mm on the
 back-inner corner.
 
-The board sits as low as `min_floor` allows. The OpenSCAD console prints every
+Keys are placed relative to the palm rest, not the desk: D sits `d_below_palm`
+under the palm rest's back-inner corner, and the palm rest is the pocket's
+front wall (`palm_gap` = 0) to bring D as close as possible. The board then
+drops as low as `min_floor` allows, and the palm rest follows it, so it sits
+4 mm above the Kinesis's 50 mm. Desk height doesn't matter to the hand, only
+these relative distances do. The OpenSCAD console prints every
 key and palm-corner height.
 
 ## Settings worth trying
 
 - `tent_angle`, `tilt_angle`: board angles. More tent raises F and the thumbs
   and lowers A; more negative tilt raises the thumbs and bottom row.
-- `palm_back_inner`: palm rest height.
+- `palm_target`, `d_below_palm`: palm rest height, and how far D sits below it.
 - `palm_slope`, `palm_side`: the palm rest's own tilts, independent of the board.
 - `palm_width` (default 80 mm): the inner edge stays on the F key, so this
   sets how far the rest reaches past the board's outer edge. It stops short
   of the thumb keys.
-- `palm_gap`: room for the thumb knuckle between palm rest and board.
+- `palm_gap` (default 0): space between palm rest and case.
 - `pad_recess`, `pad_w`, `pad_d`: the palm pad recess (see below). `pad_recess = 0` removes it.
 
 ## Palm pads

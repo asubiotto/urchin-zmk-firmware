@@ -19,10 +19,11 @@ clearance = 0.6;
 key_top_height = 15;
 
 /* [Targets: measured on your Kinesis Advantage2] */
-// Desk to top of the D key (mm). The board drops to this, unless min_floor stops it higher
-d_key_height = 30;
-// Desk to top of the palm pad at its back-inner corner, the corner nearest the F key (mm)
-palm_back_inner = 50;
+// Desk to top of the palm pad at its back-inner corner, the corner nearest the F key (mm).
+// Raised automatically if the board can't get low enough for d_below_palm
+palm_target = 50;
+// How far the D key top sits below that corner (mm). Advantage2: 50 vs 30 = 20
+d_below_palm = 20;
 // Palm rest rises toward the keys. Advantage2: front 20/30 mm, back 40/50 mm = 20 mm over ~75 mm
 palm_slope = 15; // [0:1:25]
 // Palm rest rises toward the thumbs. Advantage2: 10 mm over ~95 mm
@@ -42,8 +43,9 @@ palm_depth = 68;
 // Palm rest width (mm). Its inner edge runs through the F key centre, like the Advantage2;
 // it reaches past the board's outer edge by palm_width - ~63 mm
 palm_width = 80;
-// Gap between case front edge and palm rest, room for thumb knuckle (mm)
-palm_gap = 7;
+// Gap between case front edge and palm rest (mm). 0 = the palm rest is the pocket's front wall,
+// which puts D ~55 mm (bird's eye) behind the palm rest's back edge; Advantage2: ~50
+palm_gap = 0;
 // Rounding on the palm rest top edges (mm)
 palm_round = 6;
 /* [Palm pad] */
@@ -94,12 +96,14 @@ pivot_off = [case_off + rim, 0, 0];
 // height of a local point above the deck pivot, before the base lift
 function zr(p) = (ROT * (p + pivot_off))[2];
 
-// 1) lift the stand so the D key top lands on d_key_height ...
-base_for_d = d_key_height - zr([D_KEY[0], D_KEY[1], key_above_rim]);
+// 1) lift the stand so the D key top lands d_below_palm under palm_target ...
+base_for_d = palm_target - d_below_palm - zr([D_KEY[0], D_KEY[1], key_above_rim]);
 // ... unless that would leave less than min_floor under the pocket
 floor_pts = [for (x = [-case_off, pcb_w + case_off], y = [-case_off, pcb_h + case_off]) [x, y, -pocket_depth]];
 base_for_floor = min_floor - min([for (p = floor_pts) zr(p)]);
 base = max(base_for_d, base_for_floor);
+// ... and if the floor wins, raise the palm rest with it so D stays d_below_palm under it
+palm_back_inner = palm_target + base - base_for_d;
 function base_h() = base;
 
 // 2) palm rest: a plane in desk coordinates, inner edge under the F key centre
@@ -121,7 +125,10 @@ echo(str("Palm pad top, front-outer / front-inner / back-inner / back-outer: ",
 echo(str("Palm pad centre: ", palm_z(pad_x + pad_w / 2, pad_y + pad_d / 2), " mm"));
 echo(str("Thumb key tops: ", [for (t = THUMBS) world([t[0], t[1], key_above_rim])[2]], " mm"));
 if (base_for_floor > base_for_d)
-    echo("Board sits as low as min_floor allows");
+    echo(str("Palm rest raised ", base - base_for_d, " mm above palm_target to keep min_floor under the pocket"));
+echo(str("D key: ", palm_back_inner - world([D_KEY[0], D_KEY[1], key_above_rim])[2], " mm below the palm corner, ",
+         world([D_KEY[0], D_KEY[1], key_above_rim])[1] - world([D_KEY[0], 13.5 - case_off, 0])[1] - palm_gap,
+         " mm behind the palm rest's back edge"));
 
 module pcb() { polygon(URCHIN_PCB_LEFT); }
 // case outline: PCB grown by the wall, notches smoothed shut
