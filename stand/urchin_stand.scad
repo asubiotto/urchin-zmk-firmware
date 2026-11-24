@@ -19,7 +19,7 @@ clearance = 0.6;
 key_top_height = 15;
 
 /* [Targets: measured on your Kinesis Advantage2] */
-// Desk to top of the D key (mm). Advantage2: A, S, D ~30, F ~40. The board is placed so D lands here
+// Desk to top of the D key (mm). The board drops to this, unless min_floor stops it higher
 d_key_height = 30;
 // Desk to top of the palm pad at its back-inner corner, the corner nearest the F key (mm)
 palm_back_inner = 50;
@@ -29,10 +29,12 @@ palm_slope = 15; // [0:1:25]
 palm_side = 6; // [0:1:25]
 
 /* [Ergonomics] */
-// Tenting, inner (thumb) edge raised. 10.7 puts A 10 mm below F, as on your Advantage2
-tent_angle = 10.7; // [0:0.1:35]
-// Front-to-back tilt of the keyboard (the palm rest has its own palm_slope)
-tilt_angle = 0; // [-10:1:10]
+// Tenting, inner (thumb) edge raised. 12 + tilt -13.5 is the best fit to the
+// Advantage2 heights (A/S/D 30, F 40, thumbs 52/55)
+tent_angle = 12; // [0:0.5:35]
+// Front-to-back tilt of the keyboard; negative = front edge up, which lifts the thumb keys
+// (the palm rest has its own palm_slope)
+tilt_angle = -13.5; // [-20:0.5:10]
 // How deep the case sits in the pocket (mm)
 pocket_depth = 5;
 // Palm rest depth toward you (mm)
@@ -119,7 +121,7 @@ echo(str("Palm pad top, front-outer / front-inner / back-inner / back-outer: ",
 echo(str("Palm pad centre: ", palm_z(pad_x + pad_w / 2, pad_y + pad_d / 2), " mm"));
 echo(str("Thumb key tops: ", [for (t = THUMBS) world([t[0], t[1], key_above_rim])[2]], " mm"));
 if (base_for_floor > base_for_d)
-    echo("WARNING: D key sits higher than d_key_height, to keep min_floor under the pocket");
+    echo("Board sits as low as min_floor allows");
 
 module pcb() { polygon(URCHIN_PCB_LEFT); }
 // case outline: PCB grown by the wall, notches smoothed shut
@@ -142,9 +144,13 @@ module palm2d() {
 }
 // low web joining palm rest and deck so it prints as one piece
 module bridge2d() {
-    difference() {
-        offset(r = -12) offset(r = 12) union() { on_desk() deck2d(); palm2d(); }
-        on_desk() case2d(1);
+    // only in front, and 1 mm inside the deck outline, so its walls never just touch the deck's
+    intersection() {
+        difference() {
+            offset(r = -12) offset(r = 12) union() { on_desk() offset(delta = -1) deck2d(); palm2d(); }
+            on_desk() case2d(1);
+        }
+        translate([-200, -200]) square([500, 225]);
     }
 }
 // shear flat z = 0 onto the palm plane (plastic top, pad_dz below the pad surface)

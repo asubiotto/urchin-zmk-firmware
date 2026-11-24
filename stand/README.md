@@ -4,7 +4,7 @@
 
 One stand per half. It tents the board, holds the case in a pocket, and puts a
 palm rest in front at about home-row height, like the pads on a Kinesis
-Advantage. Each half is 141 × 169 × 47 mm, so it fits a **Bambu Lab A1 mini**
+Advantage. Each half is 143 × 166 × 52 mm, so it fits a **Bambu Lab A1 mini**
 (180 mm bed).
 
 The pocket follows the real Urchin PCB outline (from
@@ -34,48 +34,41 @@ The pocket follows the real Urchin PCB outline (from
 ## How the heights are set
 
 The stand is designed backwards from measurements on an Advantage2, desk to
-top (left half, with the foam pad):
+top, left half:
 
 | | Advantage2 (measured) | Stand |
 |---|---|---|
-| D key | ~30 mm | `d_key_height` = 30 |
-| F key | ~40 mm (highest key) | 33 mm |
-| S key | ~30 mm | 27 mm |
-| A key | ~30 mm | 23 mm |
-| Palm rest, back-inner corner | ~50 mm | `palm_back_inner` = 50 |
-| Palm rest, back-outer | ~40 mm | 42 mm |
-| Palm rest, front-inner | ~30 mm | 30 mm |
-| Palm rest, front-outer | ~20 mm | 22 mm |
+| A / S / D | ~30 mm | 31 / 32 / 34 mm |
+| F | ~40 mm | 39 mm |
+| Thumb, outer (Kinesis Backspace) | ~52 mm | 50 mm |
+| Thumb, inner (Kinesis Delete) | ~55 mm | 56 mm |
+| Palm rest corners: front-outer, front-inner, back-inner, back-outer | 20, 30, 50, 40 mm | 22, 30, 50, 42 mm |
 | Palm rest inner edge | runs through the F key centre | same |
-| Keyboard tent | F→A drops 10 mm | `tent_angle` = 10.7° (same 10 mm drop) |
 
-The Advantage2's palm rest isn't flat. Its four corners lie on one plane
-that rises about 20 mm toward the keys over ~75 mm (`palm_slope` = 15°)
-and about 10 mm toward the thumbs over ~95 mm (`palm_side` = 6°). The stand's
-palm rest uses the same plane, anchored at the back-inner corner. It's 80 mm wide
-against the Kinesis's ~95 mm, so the front-outer corner ends up 2 mm higher.
+**Board angles: 12° tent, front edge up 13.5° (`tilt_angle` = −13.5).** These
+are the best fit to the six key heights above. The front-up tilt is what
+lifts the thumb keys: the Advantage2 sits them on raised clusters 20–25 mm
+above the home row, and a flat board can only get there by raising its front.
+The side effect is the top row sits about 4 mm lower than the home row and the
+bottom row about 4 mm higher.
 
 **Why not Kinesis's 20°?** That figure describes how far the key wells are
-tipped, not the key tops. Inside the curved wells S and D sit deeper than F,
-so on your board the home-row tops only drop 10 mm from F to A, which works
-out to about 10.7° across a flat row. At 20° the pinky ended up 20 mm off the desk.
+tipped, not the key tops. Across your home row the tops only drop about 10 mm
+from F to A. At 20° the pinky ended up 20 mm off the desk.
 
-A flat board can't copy the well's curve, so the stand keeps the 10 mm F-to-A
-drop and is placed so D, the middle finger, matches the Advantage2 at 30 mm.
-F and A each come out about 7 mm lower than on the Kinesis.
+**Palm rest angles: 6° toward the thumbs (`palm_side`), 15° toward the keys
+(`palm_slope`)**, set separately from the board, anchored at 50 mm on the
+back-inner corner.
 
-The palm rest is tilted separately from the board, in desk coordinates. It
-rises 6° toward the thumbs (`palm_side`) and 15° toward the keys (`palm_slope`),
-anchored at 50 mm on its back-inner corner. The OpenSCAD console prints every
+The board sits as low as `min_floor` allows. The OpenSCAD console prints every
 key and palm-corner height.
 
 ## Settings worth trying
 
-- `d_key_height`, `palm_back_inner`: the 20 mm drop between them puts the keys
-  below your wrist, like the Advantage2's key wells.
+- `tent_angle`, `tilt_angle`: board angles. More tent raises F and the thumbs
+  and lowers A; more negative tilt raises the thumbs and bottom row.
+- `palm_back_inner`: palm rest height.
 - `palm_slope`, `palm_side`: the palm rest's own tilts, independent of the board.
-- `tent_angle` (default 10.7°): keyboard tent. It pivots around D, so more tent raises F and lowers A.
-- `tilt_angle` (default 0°): front-to-back tilt of the board only.
 - `palm_width` (default 80 mm): the inner edge stays on the F key, so this
   sets how far the rest reaches past the board's outer edge. It stops short
   of the thumb keys.
