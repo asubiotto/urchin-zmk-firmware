@@ -45,7 +45,7 @@ Urchin):
 | A key vs D | level | 1 mm above |
 | F key vs D | 10 mm above | 5 mm above |
 | Relaxed thumb tip / point between the thumb keys | 3.5 mm above | 0.5 mm above |
-| Palm rest inner edge | through the F key centre | same |
+| Palm pad's inner edge, bird's eye | through the F key centre | same (the plastic carries on 8 mm past it, to round the edge) |
 
 **Board: 10° tent, front edge up 17.5° (`tilt_angle` = −17.5).** A flat board
 can't copy the Kinesis's curved wells, so these angles are a compromise:

@@ -40,9 +40,9 @@ tilt_angle = -17.5; // [-20:0.5:10]
 pocket_depth = 5;
 // Palm rest depth toward you (mm)
 palm_depth = 68;
-// Palm rest width (mm). Its inner edge runs through the F key centre, like the Advantage2;
-// it reaches past the board's outer edge by palm_width - ~63 mm
-palm_width = 80;
+// Palm rest width (mm). The pad's inner edge runs through the F key centre, like the Advantage2;
+// the plastic reaches palm_round + 2 mm past it, and outward past the board's outer edge
+palm_width = 88;
 // Gap between case front edge and palm rest (mm). 0 = the palm rest is the pocket's front wall,
 // which puts D ~55 mm (bird's eye) behind the palm rest's back edge; Advantage2: ~50
 palm_gap = 0;
@@ -108,20 +108,23 @@ function base_h() = base;
 
 // 2) palm rest: a plane in desk coordinates, inner edge under the F key centre
 function world(p) = ROT * (p + pivot_off) + [0, 0, base];
-x_in = world([F_KEY[0], F_KEY[1], key_above_rim])[0];
+// the pad's inner edge runs through the F key centre, as on the Advantage2;
+// the plastic goes on past it by the top-edge rounding, so the flat top ends there too
+x_f = world([F_KEY[0], F_KEY[1], key_above_rim])[0];
+x_in = x_f + palm_round + 2;
 x_out = x_in - palm_width;
 y_front = -case_off - palm_depth;
 y_back = 12.5 - case_off - palm_gap;            // back edge at the inner corner (PCB front edge there is y ~12.5)
 pad_dz = pad_thickness - pad_recess;           // pad surface above the plastic
 // height of the pad surface at a desk (x, y)
-function palm_z(x, y) = palm_back_inner + (x - x_in) * tan(palm_side) + (y - y_back) * tan(palm_slope);
-pad_x = (x_in + x_out) / 2 - pad_w / 2;
+function palm_z(x, y) = palm_back_inner + (x - x_f) * tan(palm_side) + (y - y_back) * tan(palm_slope);
+pad_x = x_f - pad_w;
 pad_y = -63;
 
 echo(str("Tent: ", tent_angle, " deg"));
 echo(str("Home row tops A S D F: ", [for (k = [A_KEY, S_KEY, D_KEY, F_KEY]) world([k[0], k[1], key_above_rim])[2]], " mm"));
-echo(str("Palm pad top, front-outer / front-inner / back-inner / back-outer: ",
-         [palm_z(x_out, y_front), palm_z(x_in, y_front), palm_z(x_in, y_back), palm_z(x_out, y_back)], " mm"));
+echo(str("Palm pad surface plane at the pad's outer/inner edges, front-outer / front-inner / back-inner / back-outer: ",
+         [palm_z(pad_x, y_front), palm_z(x_f, y_front), palm_z(x_f, y_back), palm_z(pad_x, y_back)], " mm"));
 echo(str("Palm pad centre: ", palm_z(pad_x + pad_w / 2, pad_y + pad_d / 2), " mm"));
 echo(str("Between the thumb keys: ", (world([THUMBS[0][0], THUMBS[0][1], key_above_rim])[2] + world([THUMBS[1][0], THUMBS[1][1], key_above_rim])[2]) / 2 - palm_back_inner, " mm vs the palm corner"));
 echo(str("Thumb key tops: ", [for (t = THUMBS) world([t[0], t[1], key_above_rim])[2]], " mm"));
